@@ -6,7 +6,7 @@
 # Example:
 #   timesheet github#135 work/wdft/groundwater
 
-source .yattarc
+source $HOME/.yattarc
 
 declare -i ELAPSED
 declare -i HOUR

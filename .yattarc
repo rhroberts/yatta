@@ -1,2 +1,6 @@
+#!/bin/bash
+
+# example yatta config file, which should be placed in user's home dir
+
 YATTA_DATA_DIR=$HOME/ownCloud/yatta_data
 YATTA_DATA_FILE=timesheet.csv

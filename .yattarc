@@ -1,0 +1,2 @@
+YATTA_DATA_DIR=$HOME/ownCloud/yatta_data
+YATTA_DATA_FILE=timesheet.csv

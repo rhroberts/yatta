@@ -17,3 +17,6 @@ Then create `.yattarc` in your home directory. An example file is given [here](.
 
 - TASK is case-insensitive
 - TAGS should be of the form `tag` or `tag1/tag2/tag3`
+  - `yatta exercise personal/fitness`
+  - `yatta "take out the trash" chores/personal/todo`
+  

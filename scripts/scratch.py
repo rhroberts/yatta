@@ -1,43 +1,53 @@
 #!/usr/bin/env python
-import time
 import curses
 from pyfiglet import Figlet
 
 
-def _time_print(font, hour, min, sec):
-    if hour != 0:
-        htext = f"{hour}h "
-    else:
-        htext = ""
-    if min != 0:
-        mtext = f"{min}m "
-    else:
-        mtext = ""
-    stext = f"{sec}s"
+def _time_div(count):
+    min, sec = divmod(count, 60)
+    hour, min = divmod(min, 60)
+    return(hour, min, sec)
 
-    time_str = font.renderText(f"{htext}{mtext}{stext}")
+
+def _time_print(font, count, figlet=True):
+    hour, min, sec = _time_div(count)
+    if figlet:
+        time_str = font.renderText(f"{hour:02}:{min:02}:{sec:02}")
+    else:
+        time_str = f"{hour:02}:{min:02}:{sec:02}"
     return(time_str)
 
 
-def _stopwatch(stdscr, font):
-    try:
-        count = 0
-        while True:
-            min, sec = divmod(count, 60)
-            hour, min = divmod(min, 60)
-            stdscr.insstr(_time_print(font, hour, min, sec))
-            time.sleep(1)
-            count += 1
-            stdscr.refresh()
-    except KeyboardInterrupt:
-        pass
+def _stopwatch(stdscr, task, font, figlet=True):
+    QUIT = ord('q')
+    h, w = stdscr.getmaxyx()
+    curses.echo()
+    stdscr.timeout(1000)
+    count = 0
+    if figlet:
+        stdscr.addstr(font.renderText(task))
+    else:
+        stdscr.addstr(task)
+
+    while True:
+        stdscr.insstr(_time_print(font, count, figlet))
+        count += 1
+        ch = stdscr.getch()
+        stdscr.refresh()
+        if ch == QUIT:
+            break
+    return(count)
+
+
+def main(stdscr, task, font, figlet=True):
+    curses.use_default_colors()
+    count = _stopwatch(stdscr, task, font, figlet)
     return(count)
 
 
 if __name__ == "__main__":
-    stdscr = curses.initscr()
+    task = "Temporary Task"
     font = Figlet(font='larry3d')
-    count = _stopwatch(stdscr, font)
-    stdscr.clear()
-    # stdscr.insstr(font.renderText(f"\nTotal: {count} seconds"))
-    print(f"\nTotal: {count} seconds")
+    count = curses.wrapper(main, task, font, figlet=False)
+    # TODO: make it optional to pass font
+    print(f"\nTotal {_time_print(font, count, figlet=False)}")

@@ -1,36 +1,43 @@
 #!/usr/bin/env python
 import time
-import sys
+import curses
+from pyfiglet import Figlet
 
-def _time_print(h, m, s):
-    if h == 1:
-        htext = f"{h} hour "
-    elif h != 0:
-        htext = f"{h} hours "
+
+def _time_print(font, hour, min, sec):
+    if hour != 0:
+        htext = f"{hour}h "
     else:
         htext = ""
-    if m == 1:
-        mtext = f"{m} minute "
-    elif m != 0:
-        mtext = f"{m} minutes "
+    if min != 0:
+        mtext = f"{min}m "
     else:
         mtext = ""
-    if s == 1:
-        stext = f"{s} second"
-    else:
-        stext = f"{s} seconds"
-    return(f"\u23F0 {htext}{mtext}{stext} have elapsed \u23F0")
-try:
-    n = 0
-    while True:
-        m, s = divmod(n, 60)
-        h, m = divmod(m, 60)
-        sys.stdout.write("\r")
-        sys.stdout.write(_time_print(h, m, s))
-        sys.stdout.flush()
-        time.sleep(1)
-        n += 1
-except KeyboardInterrupt:
-    pass
+    stext = f"{sec}s"
 
-print(f"\nTotal: {n} seconds")
+    time_str = font.renderText(f"{htext}{mtext}{stext}")
+    return(time_str)
+
+
+def _stopwatch(stdscr, font):
+    try:
+        count = 0
+        while True:
+            min, sec = divmod(count, 60)
+            hour, min = divmod(min, 60)
+            stdscr.insstr(_time_print(font, hour, min, sec))
+            time.sleep(1)
+            count += 1
+            stdscr.refresh()
+    except KeyboardInterrupt:
+        pass
+    return(count)
+
+
+if __name__ == "__main__":
+    stdscr = curses.initscr()
+    font = Figlet(font='larry3d')
+    count = _stopwatch(stdscr, font)
+    stdscr.clear()
+    # stdscr.insstr(font.renderText(f"\nTotal: {count} seconds"))
+    print(f"\nTotal: {count} seconds")

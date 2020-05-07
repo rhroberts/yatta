@@ -24,7 +24,7 @@ fi
 
 export TAGS="${2,,}"
 export TMP=$YATTA_DATA_DIR/.yatta.tmp  # from .yattarc
-export TS_FILE=$YATTA_DATA_DIR/$YATTA_DATA_FILE
+export TS_FILE=$YATTA_DATA_FILE
 export DATE=$(date +%x)
 
 export START_TIME=$(date +%X)

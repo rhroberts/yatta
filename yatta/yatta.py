@@ -2,6 +2,8 @@
 import curses
 import click
 from pyfiglet import Figlet
+from datetime import datetime
+from .data_utils import print_timesheet, record_task
 
 CLICK_CONTEXT_SETTINGS = dict(
     help_option_names=['-h', '--help'],
@@ -36,14 +38,16 @@ def _stopwatch(stdscr, task, font):
     # FIXME: this errors out if text overflows terminal
     stdscr.addstr(font.renderText(task))
     count = 0
+    start_time = datetime.now()
     while True:
         stdscr.insstr(_time_figlet_print(font, count))
         count += 1
         ch = stdscr.getch()
         stdscr.refresh()
         if ch == QUIT_KEY:
+            end_time = datetime.now()
             break
-    return(count)
+    return(count, start_time, end_time)
 
 
 @click.group(context_settings=CLICK_CONTEXT_SETTINGS)
@@ -58,10 +62,10 @@ def main():
               help='Select figlet font (http://www.figlet.org/).')
 def track(task, font, **kwargs):
     font = Figlet(font=font)
-    count = curses.wrapper(_stopwatch, task, font)
+    count, start_time, end_time = curses.wrapper(_stopwatch, task, font)
+    record_task(task, start_time, end_time, count)
     print(f"\nWorked on {task} for {count/3600:.2f} hrs" +
           f" ({_time_print(count)}) \u2714")
-    return(count)
 
 
 @main.command()
@@ -72,7 +76,8 @@ def track(task, font, **kwargs):
 @click.option('-m', '--month', 'period', help='Print this month\'s timesheet.',
               flag_value='month')
 def report(period):
-    print(f'This is your timesheet for the {period}.')
+    print(f'Your timesheet for the {period}:')
+    print_timesheet()
 
 
 @main.command()

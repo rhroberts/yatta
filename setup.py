@@ -14,7 +14,7 @@ setuptools.setup(
     url='https://github.com/rhroberts/yatta',
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
-    install_requires=['click', 'pyfiglet'],
+    install_requires=['click', 'pyfiglet', 'PyGnuplot', 'pandas'],
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',

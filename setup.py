@@ -23,7 +23,7 @@ setuptools.setup(
     py_modules=['yatta'],
     entry_points={
         'console_scripts': [
-            "yatta=yatta:main"
+            "yatta=yatta.yatta:main"
         ]
     }
 )

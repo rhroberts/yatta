@@ -59,7 +59,7 @@ def main():
 def track(task, font, **kwargs):
     font = Figlet(font=font)
     count = curses.wrapper(_stopwatch, task, font)
-    print(f"\nWorked on {task} for {count/360:.2f} hrs" +
+    print(f"\nWorked on {task} for {count/3600:.2f} hrs" +
           f" ({_time_print(count)}) \u2714")
     return(count)
 

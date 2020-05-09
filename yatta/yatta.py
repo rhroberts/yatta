@@ -99,5 +99,11 @@ def archive(age):
     print(f'\nOK. Data recorded more than {age} days ago has been archived.')
 
 
+@main.command()
+def config():
+    pass
+
+
 if __name__ == "__main__":
+    # make sure app database exists, create it if not
     main()

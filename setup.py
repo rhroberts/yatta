@@ -7,14 +7,20 @@ with open('README.md', 'r') as f:
 setuptools.setup(
     name='yatta',
     version='0.0.1',
-    description="Yet Another Time Tracking Tool",
+    description="Yet Another Time Tracking App",
     long_description=long_description,
     author='Rusty Roberts',
     author_email='rust.roberts@protonmail.com',
     url='https://github.com/rhroberts/yatta',
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
-    install_requires=['click', 'pyfiglet', 'PyGnuplot'],
+    install_requires=[
+        'click',
+        'pyfiglet',
+        'PyGnuplot',
+        'appdirs',
+        'sqlite3'
+    ],
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',

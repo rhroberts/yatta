@@ -1,9 +1,18 @@
 #!/usr/bin/env python
+import os
+import subprocess
 import curses
 import click
 from pyfiglet import Figlet
 from datetime import datetime
-from .data_utils import print_timesheet, record_task
+from appdirs import user_data_dir
+from yatta.db import DB
+from yatta.task import Task
+
+
+APP_NAME = 'yatta'
+DATA_DIR = user_data_dir(APP_NAME)
+APP_DB = DB(os.path.join(DATA_DIR, 'yatta.db'))
 
 CLICK_CONTEXT_SETTINGS = dict(
     help_option_names=['-h', '--help'],
@@ -30,13 +39,14 @@ def _time_figlet_print(font, count):
     return(font.renderText(_time_format(hour, min, sec)))
 
 
-def _stopwatch(stdscr, task, font):
+def _stopwatch(stdscr, taskname, font):
     QUIT_KEY = ord('q')
     curses.echo()
     curses.use_default_colors()
+    # FIXME: timeout gets reset when resizing terminal
     stdscr.timeout(1000)
     # FIXME: this errors out if text overflows terminal
-    stdscr.addstr(font.renderText(task))
+    stdscr.addstr(font.renderText(taskname))
     count = 0
     start_time = datetime.now()
     while True:
@@ -47,7 +57,7 @@ def _stopwatch(stdscr, task, font):
         if ch == QUIT_KEY:
             end_time = datetime.now()
             break
-    return(count, start_time, end_time)
+    return(start_time, end_time, count)
 
 
 @click.group(context_settings=CLICK_CONTEXT_SETTINGS)
@@ -58,14 +68,19 @@ def main():
 
 @main.command()
 @click.argument('task')
+@click.option('-t', '--tags', default='', help='Add relevant tags to task.')
+@click.option('-d', '--description', default='', help='Additional task info.')
 @click.option('-f', '--font', default='doom',
               help='Select figlet font (http://www.figlet.org/).')
-def track(task, font, **kwargs):
+def track(task, tags, description, font, **kwargs):
+    task = Task(task, tags=tags, description=description)
     font = Figlet(font=font)
-    count, start_time, end_time = curses.wrapper(_stopwatch, task, font)
-    record_task(task, start_time, end_time, count)
-    print(f"\nWorked on {task} for {count/3600:.2f} hrs" +
-          f" ({_time_print(count)}) \u2714")
+    task.start, task.end, task.duration = curses.wrapper(
+        _stopwatch, task.name, font
+    )
+    APP_DB.record_task(task)
+    print(f"\nWorked on {task.name} for {task.duration/3600:.2f} hrs" +
+          f" ({_time_print(task.duration)}) \u2714")
 
 
 @main.command()
@@ -77,7 +92,6 @@ def track(task, font, **kwargs):
               flag_value='month')
 def report(period):
     print(f'Your timesheet for the {period}:')
-    print_timesheet()
 
 
 @main.command()
@@ -92,18 +106,13 @@ def plot(period):
 
 
 @main.command()
-@click.option('-a', '--age', help="Archive data older than X days.",
-              default=90)
-@click.confirmation_option(prompt='Are you sure you want to archive old data?')
-def archive(age):
-    print(f'\nOK. Data recorded more than {age} days ago has been archived.')
-
-
-@main.command()
 def config():
     pass
 
 
 if __name__ == "__main__":
-    # make sure app database exists, create it if not
+    # make sure app directory exists, create it if not
+    if not os.path.isdir(DATA_DIR):
+        subprocess.run(['mkdir', '-p', DATA_DIR])
     main()
+    APP_DB.close()

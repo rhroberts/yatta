@@ -19,7 +19,6 @@ setuptools.setup(
         'pyfiglet',
         'PyGnuplot',
         'appdirs',
-        'sqlite3'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',

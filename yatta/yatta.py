@@ -115,4 +115,4 @@ if __name__ == "__main__":
     if not os.path.isdir(DATA_DIR):
         subprocess.run(['mkdir', '-p', DATA_DIR])
     main()
-    APP_DB.close()
+    APP_DB._close()

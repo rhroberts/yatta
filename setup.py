@@ -19,6 +19,8 @@ setuptools.setup(
         'pyfiglet',
         'PyGnuplot',
         'appdirs',
+        'pandas',
+        'tabulate',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',

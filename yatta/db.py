@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 from yatta.task import Task
 
 
@@ -78,12 +79,30 @@ class AppDB(DB):
                 task.start, task.end, task.duration
             )
         )
+        query = '''
+            INSERT INTO task_list
+            (task, tags, description)
+            VALUES (?, ?, ?)
+        '''
+        self.execute(
+            query, (task.name, task.tags, task.description)
+        )
 
+    # TODO: finish this; need it to ensure only uniquely named tasks are added
+    # to task_list
     def check_existing(self, task: Task):
-        # check if a task exists in DB
-        query_task = ''''''
+        # check if a task exists in task_list table
+        query_task = '''SELECT task FROM task_list'''
         self.execute(query_task)
 
-    def add_to_tasklist(self):
-        # add a new task to the tasklist table
-        pass
+    def get_tasklist(self):
+        # get the contents of a task_list table and convert to DataFrame
+        query = '''SELECT * FROM task_list'''
+        self.execute(query)
+        task_list = pd.DataFrame.from_records(self.result)
+        task_list = task_list.set_index(0, drop=True)
+        query = '''PRAGMA table_info(task_list)'''
+        self.execute(query)
+        cols = [res[1] for res in self.result[1:]]
+        task_list.columns = cols
+        return(task_list)

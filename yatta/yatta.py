@@ -6,13 +6,14 @@ import click
 from pyfiglet import Figlet
 from datetime import datetime
 from appdirs import user_data_dir
-from yatta.db import DB
+from tabulate import tabulate
+from yatta.db import AppDB
 from yatta.task import Task
 
 
 APP_NAME = 'yatta'
 DATA_DIR = user_data_dir(APP_NAME)
-APP_DB = DB(os.path.join(DATA_DIR, 'yatta.db'))
+APP_DB = AppDB(os.path.join(DATA_DIR, 'yatta.db'))
 
 CLICK_CONTEXT_SETTINGS = dict(
     help_option_names=['-h', '--help'],
@@ -108,6 +109,12 @@ def plot(period):
 @main.command()
 def config():
     pass
+
+
+@main.command()
+def list():
+    tl = APP_DB.get_tasklist()
+    print(tabulate(tl, headers=tl.columns, tablefmt='fancy_grid'))
 
 
 if __name__ == "__main__":

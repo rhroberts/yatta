@@ -2,3 +2,5 @@ pyfiglet
 click
 PyGnuplot
 appdirs
+pandas
+tabulate

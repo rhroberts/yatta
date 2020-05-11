@@ -80,7 +80,7 @@ def track(task, tags, description, font, **kwargs):
         _stopwatch, task.name, font
     )
     APP_DB.record_task(task)
-    APP_DB.add_to_task_list(task)
+    APP_DB.update_task_list(task)
     print(f"\nWorked on {task.name} for {task.duration/3600:.2f} hrs" +
           f" ({_time_print(task.duration)}) \u2714")
 
@@ -113,15 +113,13 @@ def config():
 
 
 @main.command()
-def ls():
-    tl = APP_DB.get_task_list()
-    print(tabulate(tl, headers=tl.columns, tablefmt='fancy_grid'))
-
-
-@main.command()
-@click.argument('task')
-def task(task):
-    print(Task(task, APP_DB))
+@click.argument('task_name', required=False)
+def ls(task_name=None):
+    if task_name:
+        print(Task(task_name, APP_DB))
+    else:
+        tl = APP_DB.get_task_list()
+        print(tabulate(tl, headers=tl.columns, tablefmt='fancy_grid'))
 
 
 if __name__ == "__main__":

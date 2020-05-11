@@ -80,7 +80,7 @@ class AppDB(DB):
             )
         )
 
-    def add_to_task_list(self, task):
+    def update_task_list(self, task):
         if not self.check_existing(task):
             query = '''
                 INSERT INTO task_list
@@ -88,7 +88,7 @@ class AppDB(DB):
                 VALUES (?, ?, ?, ?)
             '''
             self.execute(
-                query, (task.name, task.tags, task.description, 0)
+                query, (task.name, task.tags, task.description, task.duration)
             )
         else:
             query = '''UPDATE task_list SET total = ? WHERE task = ?'''

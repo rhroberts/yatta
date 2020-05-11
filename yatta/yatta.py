@@ -74,12 +74,13 @@ def main():
 @click.option('-f', '--font', default='doom',
               help='Select figlet font (http://www.figlet.org/).')
 def track(task, tags, description, font, **kwargs):
-    task = Task(task, tags=tags, description=description)
+    task = Task(task, APP_DB, tags=tags, description=description)
     font = Figlet(font=font)
     task.start, task.end, task.duration = curses.wrapper(
         _stopwatch, task.name, font
     )
     APP_DB.record_task(task)
+    APP_DB.add_to_task_list(task)
     print(f"\nWorked on {task.name} for {task.duration/3600:.2f} hrs" +
           f" ({_time_print(task.duration)}) \u2714")
 
@@ -112,9 +113,15 @@ def config():
 
 
 @main.command()
-def list():
-    tl = APP_DB.get_tasklist()
+def ls():
+    tl = APP_DB.get_task_list()
     print(tabulate(tl, headers=tl.columns, tablefmt='fancy_grid'))
+
+
+@main.command()
+@click.argument('task')
+def task(task):
+    print(Task(task, APP_DB))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,5 @@
 import sqlite3
 import pandas as pd
-from yatta.task import Task
 
 
 class DB(object):
@@ -41,9 +40,9 @@ class AppDB(DB):
     '''
     def __init__(self, db_path):
         super().__init__(db_path)
-        self.init_database()
+        self._init_database()
 
-    def init_database(self):
+    def _init_database(self):
         create_tasks_table = '''
             CREATE TABLE if not exists tasks (
                 id INTEGER PRIMARY KEY,
@@ -61,12 +60,13 @@ class AppDB(DB):
                 id INTEGER PRIMARY KEY,
                 task TEXT NOT NULL,
                 tags TEXT NOT NULL DEFAULT '',
-                description TEXT NOT NULL DEFAULT ''
+                description TEXT NOT NULL DEFAULT '',
+                total INTEGER NOT NULL
             )
         '''
         self.execute(create_tasklist_table)
 
-    def record_task(self, task: Task):
+    def record_task(self, task):
         query = '''
             INSERT INTO tasks
             (task, tags, description, start, stop, duration)
@@ -79,30 +79,64 @@ class AppDB(DB):
                 task.start, task.end, task.duration
             )
         )
-        query = '''
-            INSERT INTO task_list
-            (task, tags, description)
-            VALUES (?, ?, ?)
-        '''
-        self.execute(
-            query, (task.name, task.tags, task.description)
-        )
 
-    # TODO: finish this; need it to ensure only uniquely named tasks are added
-    # to task_list
-    def check_existing(self, task: Task):
+    def add_to_task_list(self, task):
+        if not self.check_existing(task):
+            query = '''
+                INSERT INTO task_list
+                (task, tags, description, total)
+                VALUES (?, ?, ?, ?)
+            '''
+            self.execute(
+                query, (task.name, task.tags, task.description, 0)
+            )
+        else:
+            query = '''UPDATE task_list SET total = ? WHERE task = ?'''
+            self.execute(query, (self.get_total_time(task), task.name))
+
+    def check_existing(self, task):
         # check if a task exists in task_list table
-        query_task = '''SELECT task FROM task_list'''
-        self.execute(query_task)
+        task_list = self.get_task_list()
+        if task_list.empty:
+            return(False)
+        return(task.name in task_list['task'].to_numpy())
 
-    def get_tasklist(self):
+    def get_task_list(self):
         # get the contents of a task_list table and convert to DataFrame
         query = '''SELECT * FROM task_list'''
         self.execute(query)
-        task_list = pd.DataFrame.from_records(self.result)
-        task_list = task_list.set_index(0, drop=True)
+        task_list = to_dataframe(self.result)
         query = '''PRAGMA table_info(task_list)'''
         self.execute(query)
-        cols = [res[1] for res in self.result[1:]]
-        task_list.columns = cols
+        if not task_list.empty:
+            task_list.columns = [res[1] for res in self.result[1:]]
         return(task_list)
+
+    def get_task_info(self, task):
+        query = '''SELECT * FROM task_list WHERE task = ?'''
+        self.execute(query, (task.name,))
+        id, name, tags, description, total = self.result[0]
+        return(id, name, tags, description, total)
+
+    # FIXME: only updates after task is tracked a second time
+    # FIXME: this all got way too convoluted...
+    def get_total_time(self, task):
+        query = '''SELECT * FROM tasks WHERE task = ?'''
+        self.execute(query, (task.name,))
+        task_history = to_dataframe(self.result)
+        if task_history.empty:
+            return(0)
+        # TODO: store table cols somewhere?
+        query = '''PRAGMA table_info(tasks)'''
+        self.execute(query)
+        task_history.columns = [res[1] for res in self.result[1:]]
+        return(task_history['duration'].sum())
+
+
+def to_dataframe(result):
+    if not result:
+        return(pd.DataFrame())
+    # convert query results to dataframe
+    df = pd.DataFrame.from_records(result)
+    df = df.set_index(0, drop=True)
+    return(df)

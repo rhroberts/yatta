@@ -4,3 +4,4 @@ PyGnuplot
 appdirs
 pandas
 tabulate
+sqlalchemy

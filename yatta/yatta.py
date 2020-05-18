@@ -7,13 +7,10 @@ from pyfiglet import Figlet
 from datetime import datetime
 from appdirs import user_data_dir
 from tabulate import tabulate
-from yatta.db import AppDB
-from yatta.task import Task
-
+import yatta.db as db
 
 APP_NAME = 'yatta'
 DATA_DIR = user_data_dir(APP_NAME)
-APP_DB = AppDB(os.path.join(DATA_DIR, 'yatta.db'))
 
 CLICK_CONTEXT_SETTINGS = dict(
     help_option_names=['-h', '--help'],
@@ -47,6 +44,7 @@ def _stopwatch(stdscr, taskname, font):
     # FIXME: timeout gets reset when resizing terminal
     stdscr.timeout(1000)
     # FIXME: this errors out if text overflows terminal
+    print(f'Taskname: {taskname}')
     stdscr.addstr(font.renderText(taskname))
     count = 0
     start_time = datetime.now()
@@ -58,7 +56,8 @@ def _stopwatch(stdscr, taskname, font):
         if ch == QUIT_KEY:
             end_time = datetime.now()
             break
-    return(start_time, end_time, count)
+    duration = end_time - start_time
+    return(start_time, end_time, duration)
 
 
 @click.group(context_settings=CLICK_CONTEXT_SETTINGS)
@@ -74,15 +73,25 @@ def main():
 @click.option('-f', '--font', default='doom',
               help='Select figlet font (http://www.figlet.org/).')
 def track(task, tags, description, font, **kwargs):
-    task = Task(task, APP_DB, tags=tags, description=description)
+    # create task if it doesn't exist
+    taskname = task
+    query = db.get_tasks(taskname)
+    if not query.first():
+        task = db.Task(name=task, tags=tags, description=description)
+    else:
+        task = query.first()
     font = Figlet(font=font)
-    task.start, task.end, task.duration = curses.wrapper(
+    start, end, duration = curses.wrapper(
         _stopwatch, task.name, font
     )
-    APP_DB.record_task(task)
-    APP_DB.update_task_list(task)
-    print(f"\nWorked on {task.name} for {task.duration/3600:.2f} hrs" +
-          f" ({_time_print(task.duration)}) \u2714")
+    record = db.Record(
+        task_name=task.name, start=start, end=end, duration=duration
+    )
+    db.add_record(task, record)
+    print(
+        f"\nWorked on {task.name} for {record.duration.seconds/3600:.2f} hrs" +
+        f" ({_time_print(record.duration.seconds)}) \u2714"
+    )
 
 
 @main.command()
@@ -114,12 +123,71 @@ def config():
 
 @main.command()
 @click.argument('task_name', required=False)
-def ls(task_name=None):
-    if task_name:
-        print(Task(task_name, APP_DB))
+def history(task_name=None):
+    query = db.get_records(task_name)
+    records = db.query_to_df(query)
+    print(tabulate(records, headers=records.columns, tablefmt='fancy_grid'))
+
+
+@main.command()
+@click.argument('task_name', required=False)
+def tasks(task_name=None):
+    query = db.get_tasks(task_name)
+    records = db.query_to_df(query)
+    print(tabulate(records, headers=records.columns, tablefmt='fancy_grid'))
+
+
+def delete():
+    pass
+
+
+# TODO: consider changing structure from "yatta edit task" to "yatta task edit"
+# similar for records. Then have "yatta task __" give task details for ___?
+# OR maybe it's better if every command is a verb though, conceptually?
+# yatta list tasks/records
+# yatta edit tasks/records (and allow for editing multiple? ooh..)
+@main.group()
+def edit():
+    '''
+    Edit attributes of tasks and records
+    '''
+    pass
+
+
+@edit.command()
+@click.argument('task_name')
+@click.option('-t', '--tags', default='', help='Add relevant tags to task.')
+@click.option('-d', '--description', default='', help='Additional task info.')
+def task(task_name, tags=None, description=None):
+    '''
+    Edit task attributes
+    '''
+    query = db.get_tasks(task_name)
+    _task = query.first()
+    if not _task:
+        print(f'\nTask \'{task_name}\' does not exist!')
+        return
+    if tags:
+        _task.tags = tags
+        # TODO: is there a better way to handle this?
+        db.session.commit()
+        print(f'\nUpdated tags for \'{task_name}\' to \'{_task.tags}\'')
+    elif description:
+        _task.description = description
+        print(f'\nUpdated description for \'{task_name}\' to ' +
+              f'\'{_task.description}\'')
+        db.session.commit()
     else:
-        tl = APP_DB.get_task_list()
-        print(tabulate(tl, headers=tl.columns, tablefmt='fancy_grid'))
+        print(f'\nNo changes to \'{task_name}\' where specified')
+
+
+@edit.command()
+@click.argument('id')
+def record():
+    '''
+    Edit record attributes
+    '''
+    pass
 
 
 if __name__ == "__main__":
@@ -127,4 +195,4 @@ if __name__ == "__main__":
     if not os.path.isdir(DATA_DIR):
         subprocess.run(['mkdir', '-p', DATA_DIR])
     main()
-    APP_DB._close()
+    db.session.close()

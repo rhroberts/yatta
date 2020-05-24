@@ -19,6 +19,9 @@ setuptools.setup(
         'pyfiglet',
         'PyGnuplot',
         'appdirs',
+        'pandas',
+        'tabulate',
+        'sqlalchemy'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',

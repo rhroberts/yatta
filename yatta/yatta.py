@@ -1,63 +1,17 @@
 #!/usr/bin/env python
 import os
 import subprocess
-import curses
 import click
-from pyfiglet import Figlet
-from datetime import datetime
 from appdirs import user_data_dir
-from yatta.db import DB
-from yatta.task import Task
-
+import yatta.db as db
+from yatta.cli import track, list, edit
 
 APP_NAME = 'yatta'
 DATA_DIR = user_data_dir(APP_NAME)
-APP_DB = DB(os.path.join(DATA_DIR, 'yatta.db'))
 
 CLICK_CONTEXT_SETTINGS = dict(
     help_option_names=['-h', '--help'],
 )
-
-
-def _time_div(count):
-    min, sec = divmod(count, 60)
-    hour, min = divmod(min, 60)
-    return(hour, min, sec)
-
-
-def _time_format(hour, min, sec):
-    return(f"{hour:02}:{min:02}:{sec:02}")
-
-
-def _time_print(count):
-    hour, min, sec = _time_div(count)
-    return(_time_format(hour, min, sec))
-
-
-def _time_figlet_print(font, count):
-    hour, min, sec = _time_div(count)
-    return(font.renderText(_time_format(hour, min, sec)))
-
-
-def _stopwatch(stdscr, taskname, font):
-    QUIT_KEY = ord('q')
-    curses.echo()
-    curses.use_default_colors()
-    # FIXME: timeout gets reset when resizing terminal
-    stdscr.timeout(1000)
-    # FIXME: this errors out if text overflows terminal
-    stdscr.addstr(font.renderText(taskname))
-    count = 0
-    start_time = datetime.now()
-    while True:
-        stdscr.insstr(_time_figlet_print(font, count))
-        count += 1
-        ch = stdscr.getch()
-        stdscr.refresh()
-        if ch == QUIT_KEY:
-            end_time = datetime.now()
-            break
-    return(start_time, end_time, count)
 
 
 @click.group(context_settings=CLICK_CONTEXT_SETTINGS)
@@ -66,48 +20,10 @@ def main():
     pass
 
 
-@main.command()
-@click.argument('task')
-@click.option('-t', '--tags', default='', help='Add relevant tags to task.')
-@click.option('-d', '--description', default='', help='Additional task info.')
-@click.option('-f', '--font', default='doom',
-              help='Select figlet font (http://www.figlet.org/).')
-def track(task, tags, description, font, **kwargs):
-    task = Task(task, tags=tags, description=description)
-    font = Figlet(font=font)
-    task.start, task.end, task.duration = curses.wrapper(
-        _stopwatch, task.name, font
-    )
-    APP_DB.record_task(task)
-    print(f"\nWorked on {task.name} for {task.duration/3600:.2f} hrs" +
-          f" ({_time_print(task.duration)}) \u2714")
-
-
-@main.command()
-@click.option('-d', '--day', 'period', help='Print today\'s timesheet.',
-              flag_value='day', default=True)
-@click.option('-w', '--week', 'period', help='Print this week\'s timesheet.',
-              flag_value='week')
-@click.option('-m', '--month', 'period', help='Print this month\'s timesheet.',
-              flag_value='month')
-def report(period):
-    print(f'Your timesheet for the {period}:')
-
-
-@main.command()
-@click.option('-d', '--day', 'period', help='Plot today\'s timesheet.',
-              flag_value='day', default=True)
-@click.option('-w', '--week', 'period', help='Plot this week\'s timesheet.',
-              flag_value='week')
-@click.option('-m', '--month', 'period', help='Plot this month\'s timesheet.',
-              flag_value='month')
-def plot(period):
-    print(f'Plot of your timesheet for the {period}.')
-
-
-@main.command()
-def config():
-    pass
+# add cli commands and command groups to main
+main.add_command(track.track)
+main.add_command(list.list)
+main.add_command(edit.edit)
 
 
 if __name__ == "__main__":
@@ -115,4 +31,4 @@ if __name__ == "__main__":
     if not os.path.isdir(DATA_DIR):
         subprocess.run(['mkdir', '-p', DATA_DIR])
     main()
-    APP_DB.close()
+    db.session.close()

@@ -3,6 +3,7 @@ from sqlalchemy import (create_engine, Column, Integer, String, ForeignKey,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, relationship
+import logging
 from appdirs import user_data_dir
 from tabulate import tabulate
 import pandas as pd
@@ -16,6 +17,8 @@ engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 Sessionmkr = sessionmaker(bind=engine)
 session = Sessionmkr()
 Base = declarative_base()
+
+logger = logging.getLogger(__name__)
 
 
 # define tables / db objects
@@ -77,25 +80,46 @@ def add_record(task, record):
     except IntegrityError:
         print(f'Task [{task.name}] exists; It\'s record will be updated.')
         session.rollback()
-
     task.records.append(record)
     session.add(record)
     session.commit()
 
 
-def get_records(taskname=None):
-    if taskname:
-        query = session.query(Record).filter(Record.task_name == taskname)
+def get_records(record_id=None, task_name_or_id=None):
+    if record_id:
+        try:
+            record_id = int(record_id)
+            query = session.query(Record).filter(Record.id == record_id)
+        except ValueError:
+            logger.warning('Record ID must be an integer!')
+            # query all records instead
+            query = session.query(Record)
+    elif task_name_or_id:
+        # check if it's a name or an id
+        try:
+            task_name_or_id = int(task_name_or_id)
+            query = session.query(Record).filter(
+                Record.task_id == task_name_or_id
+            )
+        except ValueError:
+            query = session.query(Record).filter(
+                Record.task_name == task_name_or_id
+            )
     else:
-        query = session.query(Record)
+        query = session.query(Record)  # return all records
     return(query)
 
 
-def get_tasks(taskname=None):
-    if taskname:
-        query = session.query(Task).filter(Task.name == taskname)
+def get_tasks(task_name_or_id=None):
+    if task_name_or_id:
+        # check if it's a name or an id
+        try:
+            assert int(task_name_or_id)
+            query = session.query(Task).filter(Task.id == task_name_or_id)
+        except ValueError:
+            query = session.query(Task).filter(Task.name == task_name_or_id)
     else:
-        query = session.query(Task)
+        query = session.query(Task)  # return all tasks
     return(query)
 
 
@@ -104,3 +128,16 @@ def query_to_df(query):
         query.statement, query.session.bind, index_col='id'
     )
     return(df)
+
+
+def validate_task(task):
+    '''
+    Make sure task object meets certain requirements.
+    '''
+    # Ensure that task name cannot be converted to int (conflicts w/ task id)
+    try:
+        assert int(task.name)
+        logger.warning('Cannot use integers as task names!')
+        return(False)
+    except ValueError:
+        return(True)

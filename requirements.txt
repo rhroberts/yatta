@@ -5,3 +5,4 @@ appdirs
 pandas
 tabulate
 sqlalchemy
+parsedatetime

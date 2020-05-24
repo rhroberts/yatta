@@ -21,7 +21,8 @@ setuptools.setup(
         'appdirs',
         'pandas',
         'tabulate',
-        'sqlalchemy'
+        'sqlalchemy',
+        'parsedatetime'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',

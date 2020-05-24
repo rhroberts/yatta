@@ -26,12 +26,20 @@ def task(task_name=None):
 
 @list.command()
 @click.argument('record_id', required=False)
-def record(record_id=None):
+@click.option('-t', '--task', help='Task name or ID to get records from.')
+@click.option(
+    '-m', '--max-entries', default=10,
+    help='Number of recent records to return. (Default: 10)'
+)
+@click.option('-a', '--all', is_flag=True, help='List all records.')
+def record(all, max_entries, record_id=None, task=None):
     '''
-    List all records or list records for a particular task.
+    List recent records from all tasks or a particular task.
     '''
-    query = db.get_records(record_id)
+    query = db.get_records(record_id=record_id, task_name_or_id=task)
     records = db.query_to_df(query)
+    if not all:
+        records = records.tail(max_entries)
     print(
         tabulate(records, headers=records.columns, tablefmt='fancy_grid')
     )

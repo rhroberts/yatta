@@ -22,15 +22,16 @@ def track(task, tags, description, font, **kwargs):
         task = db.Task(name=task, tags=tags, description=description)
     else:
         task = query.first()
-    font = Figlet(font=font)
-    start, end, duration = curses.wrapper(
-        stopwatch, task.name, font
-    )
-    record = db.Record(
-        task_name=task.name, start=start, end=end, duration=duration
-    )
-    db.add_record(task, record)
-    print(
-        f"\nWorked on {task.name} for {record.duration.seconds/3600:.2f} hrs" +
-        f" ({time_print(record.duration.seconds)}) \u2714"
-    )
+    if db.validate_task(task):
+        font = Figlet(font=font)
+        start, end, duration = curses.wrapper(
+            stopwatch, task.name, font
+        )
+        record = db.Record(
+            task_name=task.name, start=start, end=end, duration=duration
+        )
+        db.add_record(task, record)
+        print(
+            f'\nWorked on {task.name} for {record.duration.seconds/3600:.2f}' +
+            f'hrs ({time_print(record.duration.seconds)}) \u2714'
+        )

@@ -2,6 +2,7 @@
 import os
 import subprocess
 import click
+import logging
 from appdirs import user_data_dir
 import yatta.db as db
 from yatta.cli import track, list, edit
@@ -16,8 +17,15 @@ CLICK_CONTEXT_SETTINGS = dict(
 
 @click.group(context_settings=CLICK_CONTEXT_SETTINGS)
 @click.version_option(version='0.0.1')
-def main():
-    pass
+@click.option('-l', '--log_level', default='warning')
+def main(log_level):
+    # setup logging
+    numeric_level = getattr(logging, log_level.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError(f'Invalid log level: {log_level}')
+    logging.basicConfig(
+        format='--> %(levelname)s in %(name)s: %(message)s', level=numeric_level
+    )
 
 
 # add cli commands and command groups to main

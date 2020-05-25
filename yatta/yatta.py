@@ -6,6 +6,7 @@ import logging
 from appdirs import user_data_dir
 from . import db
 from .commands import track, list, edit
+from importlib import metadata
 
 APP_NAME = 'yatta'
 DATA_DIR = user_data_dir(APP_NAME)
@@ -16,7 +17,7 @@ CLICK_CONTEXT_SETTINGS = dict(
 
 
 @click.group(context_settings=CLICK_CONTEXT_SETTINGS)
-@click.version_option(version='0.0.1')
+@click.version_option(version=metadata.version(APP_NAME))
 @click.option('-l', '--log_level', default='warning')
 def main(log_level):
     # setup logging

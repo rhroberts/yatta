@@ -4,8 +4,8 @@ import subprocess
 import click
 import logging
 from appdirs import user_data_dir
-import yatta.db as db
-from yatta.cli import track, list, edit
+from . import db
+from .commands import track, list, edit
 
 APP_NAME = 'yatta'
 DATA_DIR = user_data_dir(APP_NAME)
@@ -24,7 +24,8 @@ def main(log_level):
     if not isinstance(numeric_level, int):
         raise ValueError(f'Invalid log level: {log_level}')
     logging.basicConfig(
-        format='--> %(levelname)s in %(name)s: %(message)s', level=numeric_level
+        format='--> %(levelname)s in %(name)s: %(message)s',
+        level=numeric_level
     )
 
 
@@ -35,8 +36,4 @@ main.add_command(edit.edit)
 
 
 if __name__ == "__main__":
-    # make sure app directory exists, create it if not
-    if not os.path.isdir(DATA_DIR):
-        subprocess.run(['mkdir', '-p', DATA_DIR])
     main()
-    db.session.close()

@@ -1,8 +1,0 @@
-pyfiglet
-click
-PyGnuplot
-appdirs
-pandas
-tabulate
-sqlalchemy
-parsedatetime

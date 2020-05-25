@@ -13,12 +13,21 @@ APP_NAME = 'yatta'
 DATA_DIR = user_data_dir(APP_NAME)
 DB_PATH = os.path.join(DATA_DIR, 'yatta.db')
 
+logger = logging.getLogger(__name__)
+
+# make sure app directory exists, create it if not
+if not os.path.isdir(DATA_DIR):
+    try:
+        os.mkdir(DATA_DIR)
+        # FIXME: this isn't showing up in logs
+        logger.debug(f'Created data directory: {DATA_DIR}')
+    except OSError:
+        logger.error(f'Failed to create directory: {DATA_DIR}')
+
 engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 Sessionmkr = sessionmaker(bind=engine)
 session = Sessionmkr()
 Base = declarative_base()
-
-logger = logging.getLogger(__name__)
 
 
 # define tables / db objects

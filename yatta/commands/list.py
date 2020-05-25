@@ -1,6 +1,6 @@
 import click
 from tabulate import tabulate
-import yatta.db as db
+from .. import db
 
 
 @click.group()

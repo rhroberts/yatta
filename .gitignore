@@ -1,3 +1,6 @@
+.coverage
+.nox
+.python_version
+.pytest_cache
 *.egg-info
 *__pycache__
-*.vscode

@@ -5,31 +5,31 @@ from datetime import datetime
 def time_div(count):
     min, sec = divmod(count, 60)
     hour, min = divmod(min, 60)
-    return(hour, min, sec)
+    return (hour, min, sec)
 
 
 def time_format(hour, min, sec):
-    return(f"{hour:02}:{min:02}:{sec:02}")
+    return f"{hour:02}:{min:02}:{sec:02}"
 
 
 def time_print(count):
     hour, min, sec = time_div(count)
-    return(time_format(hour, min, sec))
+    return time_format(hour, min, sec)
 
 
 def time_figlet_print(font, count):
     hour, min, sec = time_div(count)
-    return(font.renderText(time_format(hour, min, sec)))
+    return font.renderText(time_format(hour, min, sec))
 
 
 def stopwatch(stdscr, taskname, font):
-    QUIT_KEY = ord('q')
+    QUIT_KEY = ord("q")
     curses.echo()
     curses.use_default_colors()
     # FIXME: timeout gets reset when resizing terminal
     stdscr.timeout(1000)
     # FIXME: this errors out if text overflows terminal
-    print(f'Taskname: {taskname}')
+    print(f"Taskname: {taskname}")
     stdscr.addstr(font.renderText(taskname))
     count = 0
     start_time = datetime.now()
@@ -42,4 +42,4 @@ def stopwatch(stdscr, taskname, font):
             end_time = datetime.now()
             break
     duration = end_time - start_time
-    return(start_time, end_time, duration)
+    return (start_time, end_time, duration)

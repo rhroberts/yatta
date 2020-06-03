@@ -6,15 +6,16 @@ from yatta.utils import stopwatch, time_print
 
 
 @click.command()
-@click.argument('task')
-@click.option('-t', '--tags', default='', help='Add relevant tags to task.')
-@click.option('-d', '--description', default='', help='Additional task info.')
-@click.option('-f', '--font', default='doom',
-              help='Select figlet font (http://www.figlet.org/).')
+@click.argument("task")
+@click.option("-t", "--tags", default="", help="Add relevant tags to task.")
+@click.option("-d", "--description", default="", help="Additional task info.")
+@click.option(
+    "-f", "--font", default="doom", help="Select figlet font (http://www.figlet.org/)."
+)
 def track(task, tags, description, font, **kwargs):
-    '''
+    """
     Track time spent on a task using a stopwatch.
-    '''
+    """
     # create task if it doesn't exist
     taskname = task
     query = db.get_tasks(taskname)
@@ -24,14 +25,10 @@ def track(task, tags, description, font, **kwargs):
         task = query.first()
     if db.validate_task(task):
         font = Figlet(font=font)
-        start, end, duration = curses.wrapper(
-            stopwatch, task.name, font
-        )
-        record = db.Record(
-            task_name=task.name, start=start, end=end, duration=duration
-        )
+        start, end, duration = curses.wrapper(stopwatch, task.name, font)
+        record = db.Record(task_name=task.name, start=start, end=end, duration=duration)
         db.add_record(task, record)
         print(
-            f'\nWorked on {task.name} for {record.duration.seconds/3600:.2f}' +
-            f'hrs ({time_print(record.duration.seconds)}) \u2714'
+            f"\nWorked on {task.name} for {record.duration.seconds/3600:.2f}"
+            + f"hrs ({time_print(record.duration.seconds)}) \u2714"
         )

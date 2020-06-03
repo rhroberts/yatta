@@ -6,7 +6,7 @@ from yatta.console import main
 
 @pytest.fixture
 def runner():
-    return(CliRunner())
+    return CliRunner()
 
 
 def test_main_succeeds(runner):

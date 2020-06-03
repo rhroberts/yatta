@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-import os
-import subprocess
 import click
 import logging
 from appdirs import user_data_dir
-from . import db
 from .commands import track, list, edit
 from importlib import metadata
 

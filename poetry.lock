@@ -331,6 +331,21 @@ checkqa-mypy = ["mypy (v0.761)"]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
+category = "dev"
+description = "Pytest plugin for measuring coverage."
+name = "pytest-cov"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "2.9.0"
+
+[package.dependencies]
+coverage = ">=4.4"
+pytest = ">=3.6"
+
+[package.extras]
+testing = ["fields", "hunter", "process-tests (2.0.2)", "six", "pytest-xdist", "virtualenv"]
+
+[[package]]
 category = "main"
 description = "Extensions to the standard Python datetime module"
 name = "python-dateutil"
@@ -470,7 +485,7 @@ python-versions = "*"
 version = "0.2.3"
 
 [metadata]
-content-hash = "09e07978a37f8c578d23a094d228952914d748bd6c9200f8734ff9f135508556"
+content-hash = "9881ff7307eef4860416f294155f289aaf9243367749980ba0e377edcff42779"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -661,6 +676,10 @@ pyparsing = [
 pytest = [
     {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},
     {file = "pytest-5.4.3.tar.gz", hash = "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"},
+]
+pytest-cov = [
+    {file = "pytest-cov-2.9.0.tar.gz", hash = "sha256:b6a814b8ed6247bd81ff47f038511b57fe1ce7f4cc25b9106f1a4b106f1d9322"},
+    {file = "pytest_cov-2.9.0-py2.py3-none-any.whl", hash = "sha256:c87dfd8465d865655a8213859f1b4749b43448b5fae465cb981e16d52a811424"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},

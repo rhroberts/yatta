@@ -1,3 +1,5 @@
+# unit tests for the console module
+
 from click.testing import CliRunner
 import pytest
 

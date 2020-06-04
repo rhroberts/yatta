@@ -18,6 +18,16 @@ def time_print(count):
 
 
 def time_figlet_print(font, count):
+    """
+    Print time as ASCII art.
+
+    Args:
+        font (pyfiglet.Figlet): A Figlet "font" object.
+        count (int): Number of seconds.
+
+    Returns:
+        Figlet string
+    """
     hour, min, sec = time_div(count)
     return font.renderText(time_format(hour, min, sec))
 

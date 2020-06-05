@@ -1,0 +1,7 @@
+name: Test gh actions
+on: push
+jobs:
+  metatest:
+    runs-on: ubuntu-latest
+    steps:
+        run: echo "action worked!"

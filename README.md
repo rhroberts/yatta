@@ -19,7 +19,7 @@ pip install yatta
     ```
 - Open a shell within the poetry-managed virtual environment: `poetry shell` 
 
-Alternatively, you can manually install the dependencies in `pyproject.toml` and use the development environment of your choice.
+Alternatively, you can manually install the dependencies in [pyproject.toml](https://github.com/rhroberts/yatta/blob/master/pyproject.toml) and use the development environment of your choice.
 
 
 ## Usage

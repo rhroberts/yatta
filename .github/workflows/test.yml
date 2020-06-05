@@ -4,4 +4,4 @@ jobs:
   metatest:
     runs-on: ubuntu-latest
     steps:
-        run: echo "action worked!"
+        - run: echo "action worked!"

@@ -21,7 +21,7 @@ def edit():
 @click.option("-n", "--name", help="Change the name of the task.")
 @click.option("-t", "--tags", default="", help="Add relevant tags to task.")
 @click.option("-d", "--description", default="", help="Add additional task info.")
-def task(task_name_or_id, name=None, tags=None, description=None):
+def tasks(task_name_or_id, name=None, tags=None, description=None):
     """
     Edit task attributes.
     """
@@ -79,7 +79,7 @@ def task(task_name_or_id, name=None, tags=None, description=None):
 # TODO: Add options for start and end
 @edit.command()
 @click.argument("record_id")
-def record(record_id):
+def records(record_id):
     query = db.get_records(record_id=record_id)
     _record = query.first()
     if not _record:

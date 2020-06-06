@@ -10,6 +10,7 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import func
 import logging
 from appdirs import user_data_dir
 from tabulate import tabulate
@@ -69,7 +70,7 @@ class Record(Base):
     task_id = Column(Integer, ForeignKey("tasks.id"))
     start = Column(DateTime, nullable=False)
     end = Column(DateTime, nullable=False)
-    duration = Column(Interval, nullable=False)
+    duration = Column(Integer, nullable=False)
 
     task = relationship("Task", back_populates="records")
 
@@ -88,7 +89,7 @@ class Record(Base):
                 self.task_name,
                 self.start,
                 self.end,
-                self.duration.seconds,
+                self.duration,
             ],
         ]
         return tabulate(s, tablefmt="fancy_grid")
@@ -124,9 +125,7 @@ def get_records(record_id=None, task_name_or_id=None):
         # check if it's a name or an id
         try:
             task_name_or_id = int(task_name_or_id)
-            print(task_name_or_id)
             query = session.query(Record).filter(Record.task_id == task_name_or_id)
-            print(query.all())
         except ValueError:
             query = session.query(Record).filter(Record.task_name == task_name_or_id)
     else:
@@ -174,3 +173,10 @@ def delete_record(record):
     session.delete(record)
     session.commit()
 
+
+def update_task_total(task):
+    total = session.query(
+        func.sum(Record.duration)
+    ).filter(Task.name == task.name).first()[0]
+    task.total = total
+    session.commit()

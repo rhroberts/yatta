@@ -51,5 +51,5 @@ def stopwatch(stdscr, taskname, font):
         if ch == QUIT_KEY:
             end_time = datetime.now()
             break
-    duration = end_time - start_time
+    duration = (end_time - start_time).seconds
     return (start_time, end_time, duration)

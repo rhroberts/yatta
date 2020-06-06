@@ -17,7 +17,7 @@ def delete():
 @click.confirmation_option(
     prompt="Are you sure you want to delete specified task(s)?"
 )
-def task(task_name_or_id):
+def tasks(task_name_or_id):
     for name_id in task_name_or_id:
         query = db.get_tasks(name_id)
         _task = query.first()
@@ -44,7 +44,7 @@ def task(task_name_or_id):
 @click.confirmation_option(
     prompt="Are you sure you want to delete specifed record(s)?"
 )
-def record(record_id):
+def records(record_id):
     for _id in record_id:
         query = db.get_records(record_id=_id)
         _record = query.first()

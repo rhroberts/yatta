@@ -28,7 +28,8 @@ def track(task, tags, description, font, **kwargs):
         start, end, duration = curses.wrapper(stopwatch, task.name, font)
         record = db.Record(task_name=task.name, start=start, end=end, duration=duration)
         db.add_record(task, record)
+        db.update_task_total(task)
         print(
-            f"\nWorked on {task.name} for {record.duration.seconds/3600:.2f}"
-            + f"hrs ({time_print(record.duration.seconds)}) \u2714"
+            f"\nWorked on {task.name} for {record.duration/3600:.2f}"
+            + f"hrs ({time_print(record.duration)}) \u2714"
         )

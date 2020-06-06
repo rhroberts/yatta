@@ -5,7 +5,6 @@ from sqlalchemy import (
     String,
     ForeignKey,
     DateTime,
-    Interval,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
@@ -175,8 +174,10 @@ def delete_record(record):
 
 
 def update_task_total(task):
-    total = session.query(
-        func.sum(Record.duration)
-    ).filter(Task.name == task.name).first()[0]
+    total = (
+        session.query(func.sum(Record.duration))
+        .filter(Task.name == task.name)
+        .first()[0]
+    )
     task.total = total
     session.commit()

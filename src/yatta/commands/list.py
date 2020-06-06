@@ -20,7 +20,7 @@ def tasks(task_name=None):
     """
     query = db.get_tasks(task_name)
     _tasks = db.query_to_df(query)
-    _tasks['total'] = _tasks['total'].apply(utils.time_print)
+    _tasks["total"] = _tasks["total"].apply(utils.time_print)
     print(tabulate(_tasks, headers=_tasks.columns, tablefmt="fancy_grid"))
 
 
@@ -42,5 +42,5 @@ def records(all, max_entries, record_id=None, task=None):
     _records = db.query_to_df(query)
     if not all:
         _records = _records.tail(max_entries)
-    _records['duration'] = _records['duration'].apply(utils.time_print)
+    _records["duration"] = _records["duration"].apply(utils.time_print)
     print(tabulate(_records, headers=_records.columns, tablefmt="fancy_grid"))

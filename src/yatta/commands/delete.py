@@ -14,9 +14,7 @@ def delete():
 
 @delete.command()
 @click.argument("task_name_or_id", nargs=-1)
-@click.confirmation_option(
-    prompt="Are you sure you want to delete specified task(s)?"
-)
+@click.confirmation_option(prompt="Are you sure you want to delete specified task(s)?")
 def tasks(task_name_or_id):
     for name_id in task_name_or_id:
         query = db.get_tasks(name_id)
@@ -41,9 +39,7 @@ def tasks(task_name_or_id):
 
 @delete.command()
 @click.argument("record_id", nargs=-1)
-@click.confirmation_option(
-    prompt="Are you sure you want to delete specifed record(s)?"
-)
+@click.confirmation_option(prompt="Are you sure you want to delete specifed record(s)?")
 def records(record_id):
     for _id in record_id:
         query = db.get_records(record_id=_id)

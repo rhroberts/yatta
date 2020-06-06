@@ -1,4 +1,5 @@
 .coverage
+coverage.xml
 .nox
 .python_version
 .pytest_cache

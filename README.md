@@ -23,12 +23,11 @@ Alternatively, you can manually install the dependencies in [pyproject.toml](htt
 
 ### Future Releases
 
-#### v0.2.0
-
-- Daily, weekly, and monthly summary statistics
-- In-terminal visualization of summary statisitcs with gnuplot
-- WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
-- Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
+- **v0.2.0**
+    - Daily, weekly, and monthly summary statistics
+    - In-terminal visualization of summary statisitcs with gnuplot
+    - WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
+    - Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
 
 ## Usage
 

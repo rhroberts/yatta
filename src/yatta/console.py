@@ -2,7 +2,7 @@
 import click
 import logging
 from appdirs import user_data_dir
-from .commands import track, list, edit
+from .commands import track, list, edit, delete
 from importlib import metadata
 
 APP_NAME = "yatta"
@@ -28,6 +28,7 @@ def main(log_level):
 main.add_command(track.track)
 main.add_command(list.list)
 main.add_command(edit.edit)
+main.add_command(delete.delete)
 
 
 if __name__ == "__main__":

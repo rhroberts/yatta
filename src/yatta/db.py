@@ -124,7 +124,9 @@ def get_records(record_id=None, task_name_or_id=None):
         # check if it's a name or an id
         try:
             task_name_or_id = int(task_name_or_id)
+            print(task_name_or_id)
             query = session.query(Record).filter(Record.task_id == task_name_or_id)
+            print(query.all())
         except ValueError:
             query = session.query(Record).filter(Record.task_name == task_name_or_id)
     else:
@@ -161,3 +163,14 @@ def validate_task(task):
         return False
     except ValueError:
         return True
+
+
+def delete_task(task):
+    session.delete(task)
+    session.commit()
+
+
+def delete_record(record):
+    session.delete(record)
+    session.commit()
+

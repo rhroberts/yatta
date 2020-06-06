@@ -1,6 +1,6 @@
 # yatta
 
-Yet Another Time Tracking App
+yatta is yet another time tracking app. It's a basic stopwatch-style time tracker that stores task information and provides some reporting and visualization tools. Inspired by [termdown](https://github.com/trehn/termdown), [timetrack](https://www.flathub.org/apps/details/net.danigm.timetrack), and [taskwarrior](https://taskwarrior.org/).
 
 ## Install
 
@@ -23,8 +23,6 @@ Alternatively, you can manually install the dependencies in [pyproject.toml](htt
 
 
 ## Usage
-
-yatta is a stopwatch-style time tracker that stores task information and provides some reporting and visualization tools.
 
 There are two main components of yatta: *tasks* and *records*. Tasks are what you track. They are unique and reusable. Information about tracked tasks are stored as records. In general, the format of a yatta command is `yatta [COMMAND] [TASKS/RECORDS] [FILTER]`. For example, the command `yatta list records -t "Write README.md"` lists all records for the task "Write README.md". The `track` command is the main exception to this format, and it is specific to tasks. All other commands can be applied to both tasks and records.
 

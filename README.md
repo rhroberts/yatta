@@ -1,6 +1,6 @@
 # yatta
 
-yatta is yet another time tracking app. It's a basic stopwatch-style time tracker that stores task information and provides some reporting. Inspired by [termdown](https://github.com/trehn/termdown), [timetrack](https://www.flathub.org/apps/details/net.danigm.timetrack), and [taskwarrior](https://taskwarrior.org/).
+yatta is yet another time tracking app. It's a basic stopwatch-style time tracker that stores task information and provides some reporting. Inspired by [termdown](https://github.com/trehn/termdown), [timetrack](https://www.flathub.org/apps/details/net.danigm.timetrack), and [taskwarrior](https://taskwarrior.org/). It is not yet very stable.
 
 ## Install
 
@@ -27,6 +27,8 @@ Alternatively, you can manually install the dependencies in [pyproject.toml](htt
 
 - Daily, weekly, and monthly summary statistics
 - In-terminal visualization of summary statisitcs with gnuplot
+- WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
+- Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
 
 ## Usage
 

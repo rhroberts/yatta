@@ -1,4 +1,9 @@
-![Tests](https://github.com/rhroberts/yatta/workflows/Tests/badge.svg?branch=v0.2.0)
+[![Tests](https://github.com/rhroberts/yatta/workflows/Tests/badge.svg?branch=v0.2.0)](https://github.com/rhroberts/yatta/actions?workflow=Tests)
+[![codecov](https://codecov.io/gh/rhroberts/yatta/branch/v0.2.0/graph/badge.svg?token=KMG5UCTR1T)](https://codecov.io/gh/rhroberts/yatta)
+[![PyPI](https://img.shields.io/pypi/v/yatta.svg)](https://pypi.org/project/yatta/)
+[![Python](https://img.shields.io/pypi/pyversions/yatta)](https://github.com/rhroberts/yatta)
+
+
 
 # yatta
 

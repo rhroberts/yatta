@@ -1,3 +1,5 @@
+![Tests](https://github.com/rhroberts/yatta/workflows/Tests/badge.svg)
+
 # yatta
 
 yatta is yet another time tracking app. It's a basic stopwatch-style time tracker that stores task information and provides some reporting. Inspired by [termdown](https://github.com/trehn/termdown), [timetrack](https://www.flathub.org/apps/details/net.danigm.timetrack), and [taskwarrior](https://taskwarrior.org/). It is not yet very stable.

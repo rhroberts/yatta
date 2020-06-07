@@ -1,4 +1,4 @@
-![Tests](https://github.com/rhroberts/yatta/workflows/Tests/badge.svg)
+![Tests](https://github.com/rhroberts/yatta/workflows/Tests/badge.svg?branch=v0.2.0)
 
 # yatta
 

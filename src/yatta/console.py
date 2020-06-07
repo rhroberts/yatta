@@ -3,7 +3,11 @@ import click
 import logging
 from appdirs import user_data_dir
 from .commands import track, list, edit, delete
-from importlib import metadata
+
+try:
+    from importlib import metadata
+except ImportError:  # for Python < 3.8
+    import importlib_metadata as metadata
 
 APP_NAME = "yatta"
 DATA_DIR = user_data_dir(APP_NAME)

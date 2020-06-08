@@ -76,7 +76,7 @@ class Record(Base):
     def __repr__(self):
         return (
             f"<Record(task_name={self.task_name}, start={self.start} "
-            + f"end={self.start}, duration={self.duration.seconds})>"
+            + f"end={self.start}, duration={self.duration})>"
         )
 
     def __str__(self):

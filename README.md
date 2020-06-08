@@ -2,6 +2,7 @@
 [![codecov](https://codecov.io/gh/rhroberts/yatta/branch/master/graph/badge.svg?token=KMG5UCTR1T)](https://codecov.io/gh/rhroberts/yatta)
 [![PyPI](https://img.shields.io/pypi/v/yatta.svg)](https://pypi.org/project/yatta/)
 [![Python](https://img.shields.io/pypi/pyversions/yatta)](https://github.com/rhroberts/yatta)
+[![black](https://img.shields.io/badge/codestyle-black-000000.svg)](https://github.com/psf/black)
 
 
 

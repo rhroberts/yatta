@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yatta"
-version = "0.1.2"
+version = "0.1.3"
 description = "Yet Another Time Tracking Application"
 homepage = "https://github.com/rhroberts/yatta"
 authors = ["Rusty Roberts <rust.roberts@protonmail.com>"]

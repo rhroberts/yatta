@@ -3,7 +3,6 @@ import logging
 from datetime import datetime
 import parsedatetime as pdt
 from sqlalchemy.exc import IntegrityError
-from yatta.commands import list
 import yatta.db as db
 
 logger = logging.getLogger(__name__)

@@ -3,7 +3,8 @@ import logging
 from datetime import datetime
 import parsedatetime as pdt
 from sqlalchemy.exc import IntegrityError
-from .. import db
+from yatta.commands import list
+import yatta.db as db
 
 logger = logging.getLogger(__name__)
 
@@ -100,12 +101,13 @@ def records(record_id):
         cal = pdt.Calendar()
         start = datetime(*cal.parse(start)[0][:6])
         end = datetime(*cal.parse(end)[0][:6])
+        duration = (end - start).seconds
         if end < start:
             logger.error("End time is before start time. No changes have been made.")
             return
         _record.start = start
         _record.end = end
+        _record.duration = duration
         db.session.commit()
-        print(_record)
     else:
         print("No updates were specified.")

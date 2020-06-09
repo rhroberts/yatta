@@ -119,9 +119,8 @@ coverage = "*"
 requests = ">=2.7.9"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Cross-platform colored terminal text."
-marker = "sys_platform == \"win32\""
 name = "colorama"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
@@ -594,17 +593,6 @@ version = "0.8.7"
 widechars = ["wcwidth"]
 
 [[package]]
-category = "main"
-description = "Plotting on the command line"
-name = "termplotlib"
-optional = false
-python-versions = ">=3.5"
-version = "0.3.1"
-
-[package.dependencies]
-importlib-metadata = "*"
-
-[[package]]
 category = "dev"
 description = "Python Library for Tom's Obvious, Minimal Language"
 name = "toml"
@@ -692,7 +680,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "cecf450f58796388c83cb40a90b7f56f77f72ea867099f1e85bc0776154bfe16"
+content-hash = "4e09a127b4e2d1d7177e4c52f9e39ed0de9aacd1659d37aa8c0c334c498ca0f6"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1009,10 +997,6 @@ sqlalchemy = [
 tabulate = [
     {file = "tabulate-0.8.7-py3-none-any.whl", hash = "sha256:ac64cb76d53b1231d364babcd72abbb16855adac7de6665122f97b593f1eb2ba"},
     {file = "tabulate-0.8.7.tar.gz", hash = "sha256:db2723a20d04bcda8522165c73eea7c300eda74e0ce852d9022e0159d7895007"},
-]
-termplotlib = [
-    {file = "termplotlib-0.3.1-py3-none-any.whl", hash = "sha256:f12ee8ca58af0f6132fd90f88a3a51bd56efa8d88ad38577916cc5e466af1471"},
-    {file = "termplotlib-0.3.1.tar.gz", hash = "sha256:568e44a3a382eca0ab04d8f695b5d4f0e5ffd1daba909df3473a9e706a3cb49f"},
 ]
 toml = [
     {file = "toml-0.10.1-py2.py3-none-any.whl", hash = "sha256:bda89d5935c2eac546d648028b9901107a595863cb36bae0c73ac804a9b4ce88"},

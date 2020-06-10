@@ -8,6 +8,8 @@ import yatta.plotting as plt
 
 logger = logging.getLogger(__name__)
 
+cal = pdt.Calendar()
+
 
 @click.group()
 def plot():
@@ -28,11 +30,15 @@ def plot():
     "-m", "--month", "period", help="Plot this month's timesheet.", flag_value="month"
 )
 @click.option(
-    "-d", "--start-date", help="Plot data from this date onward.", default="today"
+    "-s", "--start-date", help="Plot data from this date onward.", default="now"
 )
-def records(period, start_date):
-    day_of_week = datetime.now().weekday()
-    year, month, day = datetime.now().timetuple()[:3]
+@click.option(
+    "-c", "--columns", help="Maximum columns on screen for plot to occupy.", default=50,
+)
+def records(period, start_date, columns):
+    start_date = datetime(*cal.parse(start_date)[0][:6])
+    day_of_week = start_date.weekday()
+    year, month, day = start_date.timetuple()[:3]
     if period == "day":
         start_date = datetime(year, month, day)
     elif period == "week":
@@ -43,5 +49,8 @@ def records(period, start_date):
         logger.error("Invalid plot period!")
 
     query = db.get_records()
-    df = db.query_to_df(query)
-    plt._prep_hbar_stack(df, period, start_date)
+    data = plt._prep_hbar_stack(db.query_to_df(query), period, start_date)
+    if not data.empty:
+        plt.hbar_stack(data, columns)
+    else:
+        print("No data for this period!")

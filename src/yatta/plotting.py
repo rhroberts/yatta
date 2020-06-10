@@ -144,8 +144,13 @@ def hbar_stack(data, width=50):
     # color legend
     print()
     print("     ", end="")
+    i = 1
     for label, fc in legend.items():
-        print(f"{fc}{plot_unit*3} {label} ", end="")
+        if i % 4 != 0:
+            print(f"{fc}{plot_unit*3} {label} ", end="  ")
+        else:
+            print(f"\n     {fc}{plot_unit*3} {label} ", end="  ")
+        i += 1
     print()
 
 

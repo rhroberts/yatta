@@ -2,7 +2,8 @@
 import click
 import logging
 from appdirs import user_data_dir
-from .commands import track, list, edit, delete
+
+from yatta.commands import track, list, edit, delete, plot
 
 try:
     from importlib import metadata
@@ -33,6 +34,7 @@ main.add_command(track.track)
 main.add_command(list.list)
 main.add_command(edit.edit)
 main.add_command(delete.delete)
+main.add_command(plot.plot)
 
 
 if __name__ == "__main__":

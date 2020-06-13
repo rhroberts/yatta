@@ -1,5 +1,5 @@
 [flake8]
-# select = BLK,C,E,F,W
-select = F,BLK
+select = BLK,C,E,F,W
 # ignore = E203,W503
+ignore = W503
 max-line-length = 88

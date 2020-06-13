@@ -49,8 +49,15 @@ def records(period, start_date, columns):
         logger.error("Invalid plot period!")
 
     query = db.get_records()
-    data = plt._prep_hbar_stack(db.query_to_df(query), period, start_date)
+    data = plt._prep_data_for_plot(db.query_to_df(query), period, start_date)
     if not data.empty:
-        plt.hbar_stack(data, columns)
+        if period == "day":
+            plt.hbar(data, columns)
+        elif period == "week":
+            plt.hbar_stack(data, columns)
+        elif period == "month":
+            pass
+        else:
+            logger.error("Invalid plot period!")
     else:
         print("No data for this period!")

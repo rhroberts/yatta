@@ -1,5 +1,5 @@
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import colorama as co
 import numpy as np
@@ -12,6 +12,14 @@ plot_unit = "▇"
 co.init(autoreset=True)
 
 days = {0: "mon", 1: "tue", 2: "wed", 3: "thu", 4: "fri", 5: "sat", 6: "sun"}
+
+fcolors = [
+    co.Fore.LIGHTGREEN_EX,
+    co.Fore.LIGHTBLUE_EX,
+    co.Fore.LIGHTMAGENTA_EX,
+    co.Fore.LIGHTYELLOW_EX,
+    co.Fore.LIGHTRED_EX,
+]
 
 
 def _weekday_to_label(weekday):
@@ -52,7 +60,7 @@ def _prep_data_for_plot(data, period, start_date):
     elif period == "week":
         df = data[
             (data["start"] >= start_date)
-            & (data["start"] <= start_date + timedelta(days=7))
+            & (data["start"] < start_date + timedelta(days=7))
         ]
         if df.empty:
             return df
@@ -67,7 +75,18 @@ def _prep_data_for_plot(data, period, start_date):
             data_fmt.loc[task_df["weekday"], col] = task_df["duration"].values
         data_fmt = data_fmt.dropna(axis=0, how="all").fillna(0)
     elif period == "month":
-        pass
+        year, month, day = start_date.timetuple()[:3]
+        df = data[
+            (data["start"] >= start_date)
+            & (data["start"] < datetime(year, month + 1, day))
+        ]
+        # TODO: split data into calendar weeks...
+
+        if df.empty:
+            return df
+        return pd.DataFrame([])
+
+        data_fmt = df
     else:
         logger.error("Invalid plot period!")
 
@@ -103,13 +122,6 @@ def hbar(data, columns=50):
     """
     norm_factor = data.values.max()
     data_norm = data.apply(_normalize_data, args=([columns, norm_factor]))
-    fcolors = [
-        co.Fore.LIGHTGREEN_EX,
-        co.Fore.LIGHTBLUE_EX,
-        co.Fore.LIGHTMAGENTA_EX,
-        co.Fore.LIGHTYELLOW_EX,
-        co.Fore.LIGHTRED_EX,
-    ]
     print()
     for n, col in enumerate(data_norm.columns):
         val = data_norm[col].values[0]
@@ -134,13 +146,6 @@ def hbar_stack(data, columns=50):
     labels = data.index
     norm_factor = data.T.sum().max()
     data_norm = data.apply(_normalize_data, args=([columns, norm_factor]))
-    fcolors = [
-        co.Fore.LIGHTGREEN_EX,
-        co.Fore.LIGHTBLUE_EX,
-        co.Fore.LIGHTMAGENTA_EX,
-        co.Fore.LIGHTYELLOW_EX,
-        co.Fore.LIGHTRED_EX,
-    ]
     legend = {}
     print()
     for i in range(len(data_norm.index)):

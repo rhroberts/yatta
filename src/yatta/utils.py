@@ -1,5 +1,6 @@
 import curses
 from datetime import datetime
+import time
 
 
 def time_div(count):
@@ -32,19 +33,20 @@ def time_figlet_print(font, count):
     return font.renderText(time_format(hour, min, sec))
 
 
+# TODO: #8 add ability to pause stopwatch
 def stopwatch(stdscr, taskname, font):
     QUIT_KEY = ord("q")
     curses.echo()
     curses.use_default_colors()
-    # FIXME: timeout gets reset when resizing terminal
-    stdscr.timeout(1000)
-    # FIXME: this errors out if text overflows terminal
-    print(f"Taskname: {taskname}")
+    stdscr.timeout(0)
+    # FIXME: #7 this errors out if text overflows terminal
     stdscr.addstr(font.renderText(taskname))
     count = 0
     start_time = datetime.now()
     while True:
         stdscr.insstr(time_figlet_print(font, count))
+        # NOTE: using sleep is not great UX, but fixes screen resize issue
+        time.sleep(1)
         count += 1
         ch = stdscr.getch()
         stdscr.refresh()

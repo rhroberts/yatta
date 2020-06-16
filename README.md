@@ -32,12 +32,11 @@ Alternatively, you can manually install the dependencies in [pyproject.toml](htt
 ### Planned Features
 
 - **v0.2.0**
-    - "Timesheets" w/ per-task summary
-        - Daily
-        - Weekly
-    - In-terminal visualization of summary statisitcs
-        - rolled my own "plot" functions
-    - Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
+    - [ ] "Timesheets" w/ per-task summary
+        - Daily, Weekly
+    - [x] In-terminal visualization of summary statisitcs
+        - Daily, Weekly, Monthly
+    - [x] Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
 - Wish list
     - WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
     - Local web server front-end

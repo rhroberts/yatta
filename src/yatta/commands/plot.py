@@ -56,7 +56,7 @@ def records(period, start_date, columns):
         elif period == "week":
             plt.hbar_stack(data, columns)
         elif period == "month":
-            pass
+            plt.hbar_stack(data, columns)
         else:
             logger.error("Invalid plot period!")
     else:

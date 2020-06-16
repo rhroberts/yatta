@@ -35,6 +35,44 @@ def _weekday_to_label(weekday):
     return days[weekday]
 
 
+def _month_split(year, month):
+    """
+    Split month into calendar weeks.
+
+    Args:
+        year (int)
+        month (int)
+
+    Returns:
+        weeks (dict): Dict of tuples with start/end datetime for each calendar week.
+    """
+    _date = datetime(year, month, 1)
+    dow = _date.weekday()
+    weeks = {}
+    i = 0
+    while _date.month == month:
+        year, month, day = _date.timetuple()[:3]
+        try:
+            weeks[i] = (
+                datetime(year, month, day),
+                datetime(year, month, day + (7 - dow)),
+            )
+        except ValueError:
+            # adjust end datetime if it would end in a new month
+            weeks[i] = (
+                datetime(year, month, day),
+                datetime(year, month + 1, 1) - timedelta(days=1),
+            )
+        try:
+            _date += timedelta(days=7)
+        except ValueError:
+            # adjust end datetime if it would end in a new month
+            _date = datetime(year, month + 1, 1) - timedelta(days=1)
+        i += 1
+
+    return weeks
+
+
 def _prep_data_for_plot(data, period, start_date):
     """
     Take dataframe returned from yatta.db.query_to_df() and format for
@@ -79,14 +117,47 @@ def _prep_data_for_plot(data, period, start_date):
         df = data[
             (data["start"] >= start_date)
             & (data["start"] < datetime(year, month + 1, day))
-        ]
-        # TODO: split data into calendar weeks...
-
+        ].sort_values(["start"])
         if df.empty:
             return df
-        return pd.DataFrame([])
+        # Split data into calendar weeks...
+        df["week"] = 0
+        weeks = _month_split(year, month)
+        for week, week_range in weeks.items():
+            df.loc[
+                (df["start"] >= week_range[0]) & (df["start"] < week_range[1]), "week"
+            ] = week
+        df = df.groupby(["week", "task_name"]).sum()
+        tmp = pd.DataFrame(
+            columns=df.index.get_level_values(1).unique().values,
+            index=df.index.get_level_values(0).unique().values,
+        )
+        data_fmt = df.loc[df.index.get_level_values(0) == 0].T
+        for col in tmp.columns:
+            for week in tmp.index:
+                val = df.loc[
+                    (df.index.get_level_values(1) == col)
+                    & (df.index.get_level_values(0) == week),
+                    "duration",
+                ].values
+                try:
+                    tmp.loc[week, col] = val[0]
+                except IndexError:
+                    tmp.loc[week, col] = 0
+        # convert from week index to date range
+        if year == datetime.now().year:
+            tmp.index = [
+                f"{weeks[i][0].strftime('%d')}-{weeks[i][1].strftime('%d %b')}"
+                for i in tmp.index
+            ]
+        else:
+            tmp.index = [
+                f"{weeks[i][0].strftime('%d')}-{weeks[i][1].strftime('%d %b %Y')}"
+                for i in tmp.index
+            ]
 
-        data_fmt = df
+        data_fmt = tmp
+
     else:
         logger.error("Invalid plot period!")
 
@@ -160,13 +231,17 @@ def hbar_stack(data, columns=50):
         print(f" {utils.time_print(data.iloc[i].sum())}")
 
     # color legend
+    # pad legend to same column as actual plotted data
+    # eg: "mon: " --> legend_pad = 5, "01-08 Jun: " --> legend_pad = 11
+    legend_pad = len(data_norm.index.values[0]) + 2
+    pad = " " * legend_pad
     print()
-    print("     ", end="")
+    print(pad, end="")
     i = 1
     for label, fc in legend.items():
         if i % 4 != 0:
             print(f"{fc}{plot_unit*3} {label} ", end="  ")
         else:
-            print(f"\n     {fc}{plot_unit*3} {label} ", end="  ")
+            print(f"\n{pad}{fc}{plot_unit*3} {label} ", end="  ")
         i += 1
     print()

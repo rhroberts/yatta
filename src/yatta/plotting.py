@@ -19,6 +19,14 @@ fcolors = [
     co.Fore.LIGHTMAGENTA_EX,
     co.Fore.LIGHTYELLOW_EX,
     co.Fore.LIGHTRED_EX,
+    co.Fore.LIGHTCYAN_EX,
+    co.Fore.LIGHTBLACK_EX,
+    co.Fore.GREEN,
+    co.Fore.BLUE,
+    co.Fore.MAGENTA,
+    co.Fore.YELLOW,
+    co.Fore.RED,
+    co.Fore.CYAN,
 ]
 
 
@@ -157,7 +165,6 @@ def _prep_data_for_plot(data, period, start_date):
             ]
 
         data_fmt = tmp
-
     else:
         logger.error("Invalid plot period!")
 
@@ -238,8 +245,9 @@ def hbar_stack(data, columns=50):
     print()
     print(pad, end="")
     i = 1
+    rows = int(columns / 10)
     for label, fc in legend.items():
-        if i % 4 != 0:
+        if i % rows != 0:
             print(f"{fc}{plot_unit*3} {label} ", end="  ")
         else:
             print(f"\n{pad}{fc}{plot_unit*3} {label} ", end="  ")

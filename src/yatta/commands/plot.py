@@ -11,12 +11,7 @@ logger = logging.getLogger(__name__)
 cal = pdt.Calendar()
 
 
-@click.group()
-def plot():
-    pass
-
-
-@plot.command()
+@click.command()
 @click.option("-d", "--day", "period", help="Plot today's timesheet.", flag_value="day")
 @click.option(
     "-w",
@@ -35,7 +30,7 @@ def plot():
 @click.option(
     "-c", "--columns", help="Maximum columns on screen for plot to occupy.", default=50,
 )
-def records(period, start_date, columns):
+def plot(period, start_date, columns):
     start_date = datetime(*cal.parse(start_date)[0][:6])
     day_of_week = start_date.weekday()
     year, month, day = start_date.timetuple()[:3]

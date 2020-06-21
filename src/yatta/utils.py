@@ -33,7 +33,6 @@ def time_figlet_print(font, count):
     return font.renderText(time_format(hour, min, sec))
 
 
-# TODO: #8 add ability to pause stopwatch
 def stopwatch(stdscr, taskname, font):
     QUIT_KEY = ord("q")
     curses.echo()

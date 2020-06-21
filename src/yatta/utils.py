@@ -5,7 +5,6 @@ from appdirs import user_data_dir
 import os
 from filelock import FileLock, Timeout
 import logging
-import sys
 
 APP_NAME = "yatta"
 DATA_DIR = user_data_dir(APP_NAME)

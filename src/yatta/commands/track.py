@@ -33,7 +33,8 @@ def track(task, tags, description, font, **kwargs):
         if not duration:
             logger.info("Could not acquire lock. A task is already being tracked.")
             print(
-                "\nYou are already tracking a task. Please complete the running task to begin a new one."
+                "\nYou are already tracking a task. "
+                + "Please complete the running task to begin a new one."
             )
         else:
             record = db.Record(

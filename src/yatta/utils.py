@@ -41,13 +41,11 @@ def stopwatch(stdscr, taskname, font):
     stdscr.timeout(0)
     # FIXME: #7 this errors out if text overflows terminal
     stdscr.addstr(font.renderText(taskname))
-    count = 0
     start_time = datetime.now()
     while True:
-        stdscr.insstr(time_figlet_print(font, count))
-        # NOTE: using sleep is not great UX, but fixes screen resize issue
-        time.sleep(1)
-        count += 1
+        stdscr.insstr(
+            time_figlet_print(font, int(time.time() - start_time.timestamp()))
+        )
         ch = stdscr.getch()
         stdscr.refresh()
         if ch == QUIT_KEY:

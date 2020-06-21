@@ -81,10 +81,10 @@ def _month_split(year, month):
     return weeks
 
 
-def _prep_data_for_plot(data, period, start_date):
+def _preproc_data(data, period, start_date):
     """
     Take dataframe returned from yatta.db.query_to_df() and format for
-    plotting in hbar_stack()
+    timesheet or plotting in hbar_stack()
 
     Args:
         data (pd.DataFrame): Dataframe from yatta.db.query_to_df()

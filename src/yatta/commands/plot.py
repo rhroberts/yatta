@@ -31,6 +31,7 @@ cal = pdt.Calendar()
     "-c", "--columns", help="Maximum columns on screen for plot to occupy.", default=50,
 )
 def plot(period, start_date, columns):
+    # TODO: Try to order logically when plotting, e.g. by duration
     start_date = datetime(*cal.parse(start_date)[0][:6])
     day_of_week = start_date.weekday()
     year, month, day = start_date.timetuple()[:3]
@@ -44,7 +45,7 @@ def plot(period, start_date, columns):
         logger.error("Invalid plot period!")
 
     query = db.get_records()
-    data = plt._prep_data_for_plot(db.query_to_df(query), period, start_date)
+    data = plt._preproc_data(db.query_to_df(query), period, start_date)
     if not data.empty:
         if period == "day":
             plt.hbar(data, columns)

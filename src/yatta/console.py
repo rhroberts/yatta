@@ -3,7 +3,7 @@ import click
 import logging
 from appdirs import user_data_dir
 
-from yatta.commands import track, list, edit, delete, plot
+from yatta.commands import track, list, edit, delete, plot, timesheet
 
 try:
     from importlib import metadata
@@ -35,6 +35,7 @@ main.add_command(list.list)
 main.add_command(edit.edit)
 main.add_command(delete.delete)
 main.add_command(plot.plot)
+main.add_command(timesheet.timesheet)
 
 
 if __name__ == "__main__":

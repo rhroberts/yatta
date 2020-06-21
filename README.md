@@ -4,8 +4,6 @@
 [![Python](https://img.shields.io/pypi/pyversions/yatta)](https://github.com/rhroberts/yatta)
 [![black](https://img.shields.io/badge/codestyle-black-000000.svg)](https://github.com/psf/black)
 
-
-
 # yatta
 
 yatta is yet another time tracking app. It's a basic stopwatch-style time tracker that stores task information and provides some reporting. Inspired by [termdown](https://github.com/trehn/termdown), [timetrack](https://www.flathub.org/apps/details/net.danigm.timetrack), and [taskwarrior](https://taskwarrior.org/). It is not yet very stable.
@@ -20,40 +18,42 @@ pip install yatta
 
 - [Install poetry](https://python-poetry.org/docs/#installation)
 - Get source and install dependencies
-    ```bash
-    git clone https://github.com/rhroberts/yatta
-    cd yatta
-    poetry install
-    ```
-- Open a shell within the poetry-managed virtual environment: `poetry shell` 
+
+  ```bash
+  git clone https://github.com/rhroberts/yatta
+  cd yatta
+  poetry install
+  ```
+
+- Open a shell within the poetry-managed virtual environment: `poetry shell`
 
 Alternatively, you can manually install the dependencies in [pyproject.toml](https://github.com/rhroberts/yatta/blob/master/pyproject.toml) and use the development environment of your choice.
 
 ### Planned Features
 
 - **v0.2.0**
-    - [ ] "Timesheets" w/ per-task summary
-        - Daily, Weekly
-    - [x] In-terminal visualization of summary statisitcs
-        - Daily, Weekly, Monthly
-    - [x] Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
-    - [ ] Tab completion
+  - [x] "Timesheets" w/ per-task summary
+    - Daily, Weekly
+  - [x] In-terminal visualization of summary statisitcs
+    - Daily, Weekly, Monthly
+  - [x] Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
+  - [ ] Tab completion
 - Wish list
-    - WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
-    - Local web server front-end
-    - Calendar-like plots
+  - WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
+  - Local web server front-end
+  - Calendar-like plots
 
 ## Usage
 
 There are two main components of yatta: *tasks* and *records*. Tasks are what you track. They are unique and reusable. Information about tracked tasks are stored as records. In general, the format of a yatta command is `yatta [COMMAND] [TASKS/RECORDS] [FILTER]`. For example, the command `yatta list records -t "Write README.md"` lists all records for the task "Write README.md". The `track` command is the main exception to this format, and it is specific to tasks. All other commands can be applied to both tasks and records.
 
-#### Track a task
+### Track a task
 
 ```bash
 yatta track "Write README.md"  # start a stopwatch to track the task "Write README.md"
 ```
 
-#### List tasks and records
+### List tasks and records
 
 ```bash
 yatta list tasks  # list all tasks
@@ -63,14 +63,14 @@ yatta list records -t "Write README.md"  # list records for the task "Write READ
 yatta list records -t 12  # list records for task with id=12
 ```
 
-#### Edit tasks and records
+### Edit tasks and records
 
 ```bash
 yatta edit task "Write README.md" # edit info about the "Write README.md" task in default $EDITOR
-yatta edit task 8 -d "water the plants"  # add a description to task with id=8 
+yatta edit task 8 -d "water the plants"  # add a description to task with id=8
 ```
 
-#### Delete tasks and records
+### Delete tasks and records
 
 ```bash
 yatta delete task plants  # remove task "plants" and all its records from database

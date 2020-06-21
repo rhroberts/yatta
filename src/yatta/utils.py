@@ -1,6 +1,17 @@
 import curses
 from datetime import datetime
 import time
+from appdirs import user_data_dir
+import os
+from filelock import FileLock, Timeout
+import logging
+import sys
+
+APP_NAME = "yatta"
+DATA_DIR = user_data_dir(APP_NAME)
+TMP_FILE = os.path.join(DATA_DIR, "active_task")
+
+logger = logging.getLogger(__name__)
 
 
 def time_div(count):
@@ -34,6 +45,13 @@ def time_figlet_print(font, count):
 
 
 def stopwatch(stdscr, taskname, font):
+    # Set lockfile to prevent recording multiple tasks at once
+    lock = FileLock(f"{TMP_FILE}.lock")
+    try:
+        lock.acquire(timeout=0)
+    except Timeout:
+        return (None, None, None)
+
     QUIT_KEY = ord("q")
     curses.echo()
     curses.use_default_colors()
@@ -42,13 +60,16 @@ def stopwatch(stdscr, taskname, font):
     stdscr.addstr(font.renderText(taskname))
     start_time = datetime.now()
     while True:
-        stdscr.insstr(
-            time_figlet_print(font, int(time.time() - start_time.timestamp()))
-        )
+        count = int(time.time() - start_time.timestamp())
+        stdscr.insstr(time_figlet_print(font, count))
         ch = stdscr.getch()
         stdscr.refresh()
+        with open(TMP_FILE, "w") as f:
+            f.write(f"{taskname}\n{time_print(count)}\n")
         if ch == QUIT_KEY:
             end_time = datetime.now()
+            lock.release()
+            os.remove(TMP_FILE)
             break
     duration = (end_time - start_time).seconds
     return (start_time, end_time, duration)

@@ -99,13 +99,8 @@ Base.metadata.create_all(engine)
 
 
 def add_record(task, record):
-    try:
-        session.add(task)
-        session.commit()
-        print(f"Created new task: [{task.name}]")
-    except IntegrityError:
-        print(f"Task [{task.name}] exists; It's record will be updated.")
-        session.rollback()
+    session.add(task)
+    session.commit()
     task.records.append(record)
     session.add(record)
     session.commit()

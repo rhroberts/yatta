@@ -3,6 +3,10 @@ import curses
 from pyfiglet import Figlet
 import yatta.db as db
 from yatta.utils import stopwatch, time_print
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 @click.command()
@@ -26,10 +30,18 @@ def track(task, tags, description, font, **kwargs):
     if db.validate_task(task):
         font = Figlet(font=font)
         start, end, duration = curses.wrapper(stopwatch, task.name, font)
-        record = db.Record(task_name=task.name, start=start, end=end, duration=duration)
-        db.add_record(task, record)
-        db.update_task_total(task)
-        print(
-            f"\nWorked on {task.name} for {record.duration/3600:.2f}"
-            + f"hrs ({time_print(record.duration)}) \u2714"
-        )
+        if not duration:
+            logger.info("Could not acquire lock. A task is already being tracked.")
+            print(
+                "\nYou are already tracking a task. Please complete the running task to begin a new one."
+            )
+        else:
+            record = db.Record(
+                task_name=task.name, start=start, end=end, duration=duration
+            )
+            db.add_record(task, record)
+            db.update_task_total(task)
+            print(
+                f"\nWorked on {task.name} for {record.duration/3600:.2f}"
+                + f"hrs ({time_print(record.duration)}) \u2714"
+            )

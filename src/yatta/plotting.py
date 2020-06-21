@@ -63,7 +63,7 @@ def _month_split(year, month):
         try:
             weeks[i] = (
                 datetime(year, month, day),
-                datetime(year, month, day + (7 - dow)),
+                datetime(year, month, day + (6 - dow)),
             )
         except ValueError:
             # adjust end datetime if it would end in a new month

@@ -5,12 +5,18 @@ from appdirs import user_data_dir
 import os
 from filelock import FileLock, Timeout
 import logging
+from yatta.daemon import Daemon
 
 APP_NAME = "yatta"
 DATA_DIR = user_data_dir(APP_NAME)
 TMP_FILE = os.path.join(DATA_DIR, "active_task")
 
 logger = logging.getLogger(__name__)
+
+
+class StopwatchDaemon(Daemon):
+    def run(self):
+        stopwatch_daemon()
 
 
 def time_div(count):
@@ -44,6 +50,7 @@ def time_figlet_print(font, count):
 
 
 def stopwatch(stdscr, taskname, font):
+    # FIXME: This is redundant if implementing pid
     # Set lockfile to prevent recording multiple tasks at once
     lock = FileLock(f"{TMP_FILE}.lock")
     try:
@@ -63,8 +70,7 @@ def stopwatch(stdscr, taskname, font):
         stdscr.insstr(time_figlet_print(font, count))
         ch = stdscr.getch()
         stdscr.refresh()
-        with open(TMP_FILE, "w") as f:
-            f.write(f"{taskname}\n{time_print(count)}\n")
+        # _write_tmp_info(taskname, count)
         if ch == QUIT_KEY:
             end_time = datetime.now()
             lock.release()
@@ -72,3 +78,26 @@ def stopwatch(stdscr, taskname, font):
             break
     duration = (end_time - start_time).seconds
     return (start_time, end_time, duration)
+
+
+def stopwatch_daemon(taskname):
+    # # Set lockfile to prevent recording multiple tasks at once
+    # lock = FileLock(f"{TMP_FILE}.lock")
+    # try:
+    #     lock.acquire(timeout=0)
+    # except Timeout:
+    #     return (None, None, None)
+
+    start_time = datetime.now()
+    while True:
+        end_time = datetime.now()
+        duration = (end_time - start_time).seconds
+        _write_tmp_info(taskname, start_time, end_time, duration)
+
+    # lock.release()
+    # os.remove(TMP_FILE)
+
+
+def _write_tmp_info(taskname, start, end, duration):
+    with open(TMP_FILE, "w") as f:
+        f.write(f"{taskname}\n{start}\n{end}\n{time_print(duration)}\n")

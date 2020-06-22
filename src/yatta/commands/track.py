@@ -2,7 +2,7 @@ import click
 import curses
 from pyfiglet import Figlet
 import yatta.db as db
-from yatta.utils import stopwatch, time_print
+from yatta.utils import StopwatchDaemon, stopwatch, time_print
 import logging
 
 
@@ -16,7 +16,8 @@ logger = logging.getLogger(__name__)
 @click.option(
     "-f", "--font", default="doom", help="Select figlet font (http://www.figlet.org/)."
 )
-def track(task, tags, description, font, **kwargs):
+@click.option("--daemonize", help="Run yatta in the background.", is_flag=True)
+def track(task, tags, description, font, daemonize, **kwargs):
     """
     Track time spent on a task using a stopwatch.
     """
@@ -29,7 +30,11 @@ def track(task, tags, description, font, **kwargs):
         task = query.first()
     if db.validate_task(task):
         font = Figlet(font=font)
-        start, end, duration = curses.wrapper(stopwatch, task.name, font)
+        if daemonize:
+            daemon = StopwatchDaemon(taskname, "/tmp/yatta_daemon.pid")
+            daemon.start()
+        else:
+            start, end, duration = curses.wrapper(stopwatch, task.name, font)
         if not duration:
             logger.info("Could not acquire lock. A task is already being tracked.")
             print(

@@ -3,7 +3,8 @@ import logging
 
 import click
 from appdirs import user_data_dir
-from yatta.commands import delete, edit, list, plot, timesheet, track
+from yatta.commands import delete, edit, list, plot, start, timesheet
+from yatta.utils import daemon_status, daemon_stop
 
 try:
     from importlib import metadata
@@ -29,13 +30,25 @@ def main(log_level):
     )
 
 
+@click.command()
+def status():
+    daemon_status()
+
+
+@click.command()
+def stop():
+    daemon_stop()
+
+
 # add cli commands and command groups to main
-main.add_command(track.track)
+main.add_command(start.start)
 main.add_command(list.list)
 main.add_command(edit.edit)
 main.add_command(delete.delete)
 main.add_command(plot.plot)
 main.add_command(timesheet.timesheet)
+main.add_command(status)
+main.add_command(stop)
 
 
 if __name__ == "__main__":

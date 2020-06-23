@@ -7,16 +7,27 @@ import sys
 import time
 from datetime import datetime
 
-from appdirs import user_data_dir
+import yatta.db as db
+from appdirs import user_cache_dir
 from filelock import FileLock, Timeout
 
 APP_NAME = "yatta"
-DATA_DIR = user_data_dir(APP_NAME)
-TMP_FILE = os.path.join(DATA_DIR, "active_task")
+CACHE_DIR = user_cache_dir(APP_NAME)
+TMP_FILE = os.path.join(CACHE_DIR, "active_task")
+PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 
 logger = logging.getLogger(__name__)
 
+# make sure cache directory exists, create it if not
+if not os.path.isdir(CACHE_DIR):
+    try:
+        os.mkdir(CACHE_DIR)
+        logger.debug(f"Created data directory: {CACHE_DIR}")
+    except OSError:
+        logger.error(f"Failed to create directory: {CACHE_DIR}")
 
+
+# TODO: using logging, not durect stdout stderr
 class Daemon:
     """
     A generic daemon class.
@@ -139,8 +150,49 @@ class Daemon:
 
 
 class StopwatchDaemon(Daemon):
+    def __init__(self, pidfile, taskname=None):
+        Daemon.__init__(self, pidfile)
+        self.taskname = taskname
+
     def run(self):
-        stopwatch_daemon()
+        stopwatch_daemon(self.taskname)
+
+
+def daemon_start(taskname):
+    daemon = StopwatchDaemon(PID_FILE, taskname)
+    # start() will execute the hijacked run() func
+    daemon.start()
+
+
+def daemon_stop():
+    daemon = StopwatchDaemon(PID_FILE)
+    daemon.stop()
+    try:
+        start, end, duration, taskname = _read_tmp_info()
+    except FileNotFoundError:
+        print("No tasks are being tracked right now.")
+        return
+    # FIXME: Fetching task/record info from a 555 file in user space seems risky
+    # create record
+    record = db.Record(task_name=taskname, start=start, end=end, duration=duration)
+    # at this point, the task has already been added to db in track(),
+    # just need to fetch it
+    task = db.get_tasks(taskname).first()
+    db.add_record(task, record)
+    db.update_task_total(task)
+    print(
+        f"\nWorked on {task.name} for {record.duration/3600:.2f}"
+        + f"hrs ({time_print(record.duration)}) \u2714"
+    )
+    os.remove(TMP_FILE)
+
+
+def daemon_status():
+    if os.path.exists(PID_FILE):
+        start, end, duration, taskname = _read_tmp_info()
+        print(f"{taskname},{start},{end},{time_print(int(duration))}")
+    else:
+        print("No tasks are being tracked right now.")
 
 
 def time_div(count):
@@ -205,23 +257,25 @@ def stopwatch(stdscr, taskname, font):
 
 
 def stopwatch_daemon(taskname):
-    # # Set lockfile to prevent recording multiple tasks at once
-    # lock = FileLock(f"{TMP_FILE}.lock")
-    # try:
-    #     lock.acquire(timeout=0)
-    # except Timeout:
-    #     return (None, None, None)
-
     start_time = datetime.now()
     while True:
         end_time = datetime.now()
         duration = (end_time - start_time).seconds
         _write_tmp_info(taskname, start_time, end_time, duration)
-
-    # lock.release()
-    # os.remove(TMP_FILE)
+        time.sleep(1)
 
 
 def _write_tmp_info(taskname, start, end, duration):
     with open(TMP_FILE, "w") as f:
-        f.write(f"{taskname}\n{start}\n{end}\n{time_print(duration)}\n")
+        f.write(f"{start}\n{end}\n{duration}\n{taskname}\n{time_print(duration)}")
+
+
+def _read_tmp_info():
+    with open(TMP_FILE, "r") as f:
+        # ignoring the formatting duration, this is intended for external
+        # tools accessing the tmp file
+        start, end, duration, taskname, _ = f.read().split("\n")
+        start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S.%f")
+        end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S.%f")
+        duration = int(duration)
+    return (start, end, duration, taskname)

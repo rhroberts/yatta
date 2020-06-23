@@ -169,7 +169,6 @@ def delete_record(record):
 
 
 def update_task_total(task):
-    # FIXME: this is summing over multiple tasks
     total = (
         session.query(func.sum(Record.duration))
         .filter(Record.task_id == task.id)

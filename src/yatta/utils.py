@@ -225,6 +225,7 @@ def time_figlet_print(font, count):
     return font.renderText(time_format(hour, min, sec))
 
 
+# TODO: rope this into the whole daemon process if possible
 def stopwatch(stdscr, taskname, font):
     # FIXME: This is redundant if implementing pid
     # Set lockfile to prevent recording multiple tasks at once

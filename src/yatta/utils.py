@@ -187,6 +187,7 @@ def daemon_stop():
     os.remove(TMP_FILE)
 
 
+# FIXME: manually killing yatta with "kill" command doesn't remove pid file
 def daemon_status():
     if os.path.exists(PID_FILE):
         start, end, duration, taskname = _read_tmp_info()

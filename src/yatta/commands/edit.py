@@ -1,9 +1,10 @@
-import click
 import logging
 from datetime import datetime
+
+import click
 import parsedatetime as pdt
-from sqlalchemy.exc import IntegrityError
 import yatta.db as db
+from sqlalchemy.exc import IntegrityError
 
 logger = logging.getLogger(__name__)
 

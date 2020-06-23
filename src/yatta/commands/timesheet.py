@@ -1,11 +1,11 @@
+import logging
+from datetime import datetime
+
 import click
 import parsedatetime as pdt
-from datetime import datetime
-from tabulate import tabulate
-import logging
-
-from yatta.plotting import _preproc_data, _weekday_to_label
 import yatta.db as db
+from tabulate import tabulate
+from yatta.plotting import _preproc_data, _weekday_to_label
 from yatta.utils import time_print
 
 logger = logging.getLogger(__name__)

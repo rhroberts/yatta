@@ -1,5 +1,7 @@
-import click
 import logging
+
+import click
+
 from .. import db
 
 logger = logging.getLogger(__name__)

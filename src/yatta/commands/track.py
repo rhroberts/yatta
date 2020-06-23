@@ -1,10 +1,10 @@
-import click
 import curses
-from pyfiglet import Figlet
-import yatta.db as db
-from yatta.utils import StopwatchDaemon, stopwatch, time_print
 import logging
 
+import click
+import yatta.db as db
+from pyfiglet import Figlet
+from yatta.utils import StopwatchDaemon, stopwatch, time_print
 
 logger = logging.getLogger(__name__)
 

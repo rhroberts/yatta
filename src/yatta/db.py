@@ -1,19 +1,20 @@
+import logging
+import os
+
+import pandas as pd
+from appdirs import user_data_dir
 from sqlalchemy import (
-    create_engine,
     Column,
+    DateTime,
+    ForeignKey,
     Integer,
     String,
-    ForeignKey,
-    DateTime,
+    create_engine,
+    func,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy import func
-import logging
-from appdirs import user_data_dir
+from sqlalchemy.orm import relationship, sessionmaker
 from tabulate import tabulate
-import pandas as pd
-import os
 
 APP_NAME = "yatta"
 DATA_DIR = user_data_dir(APP_NAME)

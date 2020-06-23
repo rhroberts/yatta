@@ -1,6 +1,6 @@
 import nox
 
-nox.options.sessions = "lint", "tests", "coverage"
+nox.options.sessions = "isort", "black", "lint", "tests", "coverage"
 
 locations = "src", "tests", "noxfile.py"
 
@@ -32,3 +32,10 @@ def black(session):
     args = session.posargs or locations
     session.install("black")
     session.run("black", *args)
+
+
+@nox.session(python=["3.8", "3.7"])
+def isort(session):
+    args = session.posargs or locations
+    session.install("isort")
+    session.run("isort", "-rc", *args)

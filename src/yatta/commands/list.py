@@ -1,7 +1,7 @@
 import click
 from tabulate import tabulate
-from .. import db
-from .. import utils
+
+from .. import db, utils
 
 
 @click.group()

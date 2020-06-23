@@ -1,10 +1,11 @@
 import curses
-from datetime import datetime
-import time
-from appdirs import user_data_dir
-import os
-from filelock import FileLock, Timeout
 import logging
+import os
+import time
+from datetime import datetime
+
+from appdirs import user_data_dir
+from filelock import FileLock, Timeout
 from yatta.daemon import Daemon
 
 APP_NAME = "yatta"

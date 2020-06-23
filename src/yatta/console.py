@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import click
 import logging
-from appdirs import user_data_dir
 
-from yatta.commands import track, list, edit, delete, plot, timesheet
+import click
+from appdirs import user_data_dir
+from yatta.commands import delete, edit, list, plot, timesheet, track
 
 try:
     from importlib import metadata

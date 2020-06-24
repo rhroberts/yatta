@@ -9,7 +9,6 @@ from datetime import datetime
 
 import yatta.db as db
 from appdirs import user_cache_dir
-from filelock import FileLock, Timeout
 
 APP_NAME = "yatta"
 CACHE_DIR = user_cache_dir(APP_NAME)
@@ -155,7 +154,7 @@ class StopwatchDaemon(Daemon):
         self.taskname = taskname
 
     def run(self):
-        stopwatch_daemon(self.taskname)
+        stopwatch(self.taskname)
 
 
 def daemon_start(taskname):
@@ -226,45 +225,41 @@ def time_figlet_print(font, count):
     return font.renderText(time_format(hour, min, sec))
 
 
-# TODO: rope this into the whole daemon process if possible
-def stopwatch(stdscr, taskname, font):
-    # FIXME: This is redundant if implementing pid
-    # Set lockfile to prevent recording multiple tasks at once
-    lock = FileLock(f"{TMP_FILE}.lock")
-    try:
-        lock.acquire(timeout=0)
-    except Timeout:
-        return (None, None, None)
-
-    QUIT_KEY = ord("q")
-    curses.echo()
-    curses.use_default_colors()
-    stdscr.timeout(0)
-    # FIXME: #7 this errors out if text overflows terminal
-    stdscr.addstr(font.renderText(taskname))
-    start_time = datetime.now()
-    while True:
-        count = int(time.time() - start_time.timestamp())
-        stdscr.insstr(time_figlet_print(font, count))
-        ch = stdscr.getch()
-        stdscr.refresh()
-        # _write_tmp_info(taskname, count)
-        if ch == QUIT_KEY:
-            end_time = datetime.now()
-            lock.release()
-            os.remove(TMP_FILE)
-            break
-    duration = (end_time - start_time).seconds
-    return (start_time, end_time, duration)
-
-
-def stopwatch_daemon(taskname):
+def stopwatch(taskname):
     start_time = datetime.now()
     while True:
         end_time = datetime.now()
         duration = (end_time - start_time).seconds
         _write_tmp_info(taskname, start_time, end_time, duration)
         time.sleep(1)
+
+
+def dummy_stopwatch(taskname, font):
+    """
+    Start a (mostly) daemon-naive stopwatch to display w/ curses.
+    i.e., it does not check the active_task file
+    """
+
+    def show_time(stdscr, taskname, font):
+        QUIT_KEY = ord("q")
+        curses.echo()
+        curses.use_default_colors()
+        stdscr.timeout(0)
+        # FIXME: #7 this errors out if text overflows terminal
+        stdscr.addstr(font.renderText(taskname))
+        start_time = datetime.now()
+        while os.path.exists(PID_FILE):
+            count = int(time.time() - start_time.timestamp())
+            stdscr.insstr(time_figlet_print(font, count))
+            ch = stdscr.getch()
+            stdscr.refresh()
+            # FIXME: task summary is printed awkwardly over curses
+            # text on task completion
+            if ch == QUIT_KEY:
+                daemon_stop()
+            time.sleep(1)
+
+    curses.wrapper(show_time, taskname, font)
 
 
 def _write_tmp_info(taskname, start, end, duration):

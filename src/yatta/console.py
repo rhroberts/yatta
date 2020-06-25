@@ -3,7 +3,7 @@ import logging
 
 import click
 from appdirs import user_data_dir
-from yatta.commands import delete, edit, list, plot, start, timesheet
+from yatta.commands import delete, edit, list, plot, start, timesheet, config
 from yatta.utils import daemon_status, daemon_stop
 
 try:
@@ -47,6 +47,7 @@ main.add_command(edit.edit)
 main.add_command(delete.delete)
 main.add_command(plot.plot)
 main.add_command(timesheet.timesheet)
+main.add_command(config.config)
 main.add_command(status)
 main.add_command(stop)
 

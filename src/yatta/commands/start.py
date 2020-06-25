@@ -16,8 +16,14 @@ PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 logger = logging.getLogger(__name__)
 
 
+# TODO: Move this to somewhere more general, implement for other relevant commands
+def get_matching_tasks(ctx, args, incomplete):
+    task_names = [task.name for task in db.get_tasks().all()]
+    return([task_name for task_name in task_names if incomplete in task_name])
+
+
 @click.command()
-@click.argument("task")
+@click.argument("task", type=click.STRING, autocompletion=get_matching_tasks)
 @click.option("-t", "--tags", default="", help="Add relevant tags to task.")
 @click.option("-d", "--description", default="", help="Additional task info.")
 @click.option(

@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 cal = pdt.Calendar()
 
 
+# FIXME: Something's up with the weekly timesheet
 @click.command()
 @click.option(
     "-d", "--day", "period", help="Print today's timesheet.", flag_value="day",

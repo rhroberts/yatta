@@ -243,6 +243,7 @@ def dummy_stopwatch(taskname, font):
         QUIT_KEY = ord("q")
         curses.echo()
         curses.use_default_colors()
+        curses.curs_set(0)
         stdscr.timeout(0)
         # FIXME: #7 this errors out if text overflows terminal
         stdscr.addstr(font.renderText(taskname))

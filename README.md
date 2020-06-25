@@ -38,6 +38,7 @@ Alternatively, you can manually install the dependencies in [pyproject.toml](htt
     - Daily, Weekly, Monthly
   - [x] Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
   - [ ] Tab completion
+  - [ ] Config management
 - Wish list
   - WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
   - Local web server front-end

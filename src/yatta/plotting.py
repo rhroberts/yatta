@@ -118,7 +118,7 @@ def _preproc_data(data, period, start_date):
         data_fmt = pd.DataFrame(index=days.values(), columns=df["task_name"].unique())
         for col in data_fmt.columns:
             task_df = df.loc[df["task_name"] == col]
-            data_fmt.loc[task_df["weekday"], col] = task_df["duration"].values
+            data_fmt.loc[task_df["weekday"], col] = task_df["duration"].sum()
         data_fmt = data_fmt.dropna(axis=0, how="all").fillna(0)
     elif period == "month":
         year, month, day = start_date.timetuple()[:3]
@@ -200,6 +200,7 @@ def hbar(data, columns=50):
     """
     norm_factor = data.values.max()
     data_norm = data.apply(_normalize_data, args=([columns, norm_factor]))
+    data_norm = data_norm.T.sort_values("duration", ascending=False).T
     print()
     for n, col in enumerate(data_norm.columns):
         val = data_norm[col].values[0]
@@ -210,7 +211,7 @@ def hbar(data, columns=50):
         )
 
 
-def hbar_stack(data, columns=50):
+def hbar_stack(data, columns=50, show_legend=False):
     """
     Print horizontal bar chart to stdout.
 
@@ -228,9 +229,10 @@ def hbar_stack(data, columns=50):
     print()
     for i in range(len(data_norm.index)):
         print(f"{co.Fore.BLUE}{str(labels[i])}: ", end="")
-        for n, val in enumerate(data_norm.iloc[i]):
+        sorted_row = data_norm.iloc[i].sort_values(ascending=False)
+        for n, val in enumerate(sorted_row):
             fc = fcolors[n % len(fcolors)]
-            label = data_norm.columns[n]
+            label = sorted_row.index[n]
             if label not in legend:
                 legend[label] = fc
             s = plot_unit * val
@@ -240,16 +242,17 @@ def hbar_stack(data, columns=50):
     # color legend
     # pad legend to same column as actual plotted data
     # eg: "mon: " --> legend_pad = 5, "01-08 Jun: " --> legend_pad = 11
-    legend_pad = len(data_norm.index.values[0]) + 2
-    pad = " " * legend_pad
-    print()
-    print(pad, end="")
-    i = 1
-    rows = int(columns / 10)
-    for label, fc in legend.items():
-        if i % rows != 0:
-            print(f"{fc}{plot_unit*3} {label} ", end="  ")
-        else:
-            print(f"\n{pad}{fc}{plot_unit*3} {label} ", end="  ")
-        i += 1
-    print()
+    if show_legend:
+        legend_pad = len(data_norm.index.values[0]) + 2
+        pad = " " * legend_pad
+        print()
+        print(pad, end="")
+        i = 1
+        rows = int(columns / 10)
+        for label, fc in legend.items():
+            if i % rows != 0:
+                print(f"{fc}{plot_unit*3} {label} ", end="  ")
+            else:
+                print(f"\n{pad}{fc}{plot_unit*3} {label} ", end="  ")
+            i += 1
+        print()

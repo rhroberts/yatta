@@ -31,23 +31,23 @@ def start(task, tags, description, font, background, **kwargs):
     # first check if there is already a task being recorded
     if not os.path.exists(PID_FILE):
         # create task if it doesn't exist
-        taskname = task
-        query = db.get_tasks(taskname)
+        task_name_or_id = task
+        query = db.get_tasks(task_name_or_id)
         if not query.first():
-            task = db.Task(name=taskname, tags=tags, description=description)
+            task = db.Task(name=task_name_or_id, tags=tags, description=description)
             task.total = 0
-        else:
-            task = query.first()
-        if db.validate_task(task):
+            db.validate_task(task)
             db.session.add(task)
             db.session.commit()
-            font = Figlet(font=font)
-            if background:
-                daemon_start(taskname)
-            else:
-                Process(target=daemon_start, args=(taskname,)).start()
-                # stagger processes so pidfile gets created first
-                time.sleep(0.001)
-                Process(target=dummy_stopwatch, args=(taskname, font)).start()
+        else:
+            task = query.first()
+        font = Figlet(font=font)
+        if background:
+            daemon_start(task.name)
+        else:
+            Process(target=daemon_start, args=(task.name,)).start()
+            # stagger processes so pidfile gets created first
+            time.sleep(0.01)
+            Process(target=dummy_stopwatch, args=(task.name, font)).start()
     else:
         print("You are already tracking a task. Try `yatta status` for more details.")

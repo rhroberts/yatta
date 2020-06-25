@@ -171,7 +171,6 @@ def daemon_stop():
     except FileNotFoundError:
         print("No tasks are being tracked right now.")
         return
-    # FIXME: Fetching task/record info from a 555 file in user space seems risky
     # create record
     record = db.Record(task_name=taskname, start=start, end=end, duration=duration)
     # at this point, the task has already been added to db in track(),

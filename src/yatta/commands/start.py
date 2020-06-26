@@ -5,13 +5,11 @@ from multiprocessing import Process
 
 import click
 import yatta.db as db
-from appdirs import user_cache_dir
 from pyfiglet import Figlet
-from yatta.utils import daemon_start, dummy_stopwatch
 from yatta.completion_helpers import get_matching_tasks
+from yatta.utils import daemon_start, dummy_stopwatch, _get_check_app_dirs
 
-APP_NAME = "yatta"
-CACHE_DIR = user_cache_dir(APP_NAME)
+DATA_DIR, CONFIG_DIR, CACHE_DIR = _get_check_app_dirs()
 PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 
 logger = logging.getLogger(__name__)

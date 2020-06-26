@@ -5,7 +5,6 @@ import click
 import parsedatetime as pdt
 import yatta.db as db
 from sqlalchemy.exc import IntegrityError
-
 from yatta.completion_helpers import get_matching_tasks
 
 logger = logging.getLogger(__name__)

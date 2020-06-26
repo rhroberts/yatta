@@ -1,10 +1,10 @@
 import os
 
-from appdirs import user_cache_dir
 import click
 
-APPNAME = "yatta"
-CACHE_DIR = user_cache_dir(APPNAME)
+from yatta.utils import _get_check_app_dirs
+
+DATA_DIR, CONFIG_DIR, CACHE_DIR = _get_check_app_dirs()
 
 
 @click.group()

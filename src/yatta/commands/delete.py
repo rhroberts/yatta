@@ -1,7 +1,6 @@
 import logging
 
 import click
-
 import yatta.db as db
 from yatta.completion_helpers import get_matching_tasks
 

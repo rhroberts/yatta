@@ -2,9 +2,8 @@
 import logging
 
 import click
-from appdirs import user_data_dir
-from yatta.commands import delete, edit, list, plot, start, timesheet, config
-from yatta.utils import daemon_status, daemon_stop
+from yatta.commands import config, delete, edit, list, plot, start, timesheet
+from yatta.utils import daemon_status, daemon_stop, _get_check_app_dirs
 
 try:
     from importlib import metadata
@@ -12,7 +11,7 @@ except ImportError:  # for Python < 3.8
     import importlib_metadata as metadata
 
 APP_NAME = "yatta"
-DATA_DIR = user_data_dir(APP_NAME)
+DATA_DIR, CONFIG_DIR, CACHE_DIR = _get_check_app_dirs()
 
 CLICK_CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"],)
 

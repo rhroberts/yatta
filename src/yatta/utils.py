@@ -8,25 +8,46 @@ import time
 from datetime import datetime
 
 import yatta.db as db
-from appdirs import user_cache_dir
-
-APP_NAME = "yatta"
-CACHE_DIR = user_cache_dir(APP_NAME)
-TMP_FILE = os.path.join(CACHE_DIR, "active_task")
-PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
+from appdirs import user_cache_dir, user_data_dir, user_config_dir
 
 logger = logging.getLogger(__name__)
 
-# make sure cache directory exists, create it if not
-if not os.path.isdir(CACHE_DIR):
-    try:
-        os.mkdir(CACHE_DIR)
-        logger.debug(f"Created data directory: {CACHE_DIR}")
-    except OSError:
-        logger.error(f"Failed to create directory: {CACHE_DIR}")
+
+def _get_check_app_dirs():
+    """
+    Make sure common app directories exists, create them if not
+    """
+    APP_NAME = "yatta"
+    DATA_DIR = user_data_dir(APP_NAME)
+    CONFIG_DIR = user_config_dir(APP_NAME)
+    CACHE_DIR = user_cache_dir(APP_NAME)
+    if not os.path.isdir(DATA_DIR):
+        try:
+            os.mkdir(DATA_DIR)
+            logger.debug(f"Created data directory: {DATA_DIR}")
+        except OSError:
+            logger.error(f"Failed to create directory: {DATA_DIR}")
+    if not os.path.isdir(CONFIG_DIR):
+        try:
+            os.mkdir(CONFIG_DIR)
+            logger.debug(f"Created config directory: {CONFIG_DIR}")
+        except OSError:
+            logger.error(f"Failed to create directory: {CONFIG_DIR}")
+    if not os.path.isdir(CACHE_DIR):
+        try:
+            os.mkdir(CACHE_DIR)
+            logger.debug(f"Created cache directory: {CACHE_DIR}")
+        except OSError:
+            logger.error(f"Failed to create directory: {CACHE_DIR}")
+
+    return (DATA_DIR, CONFIG_DIR, CACHE_DIR)
 
 
-# TODO: use logging, not direct stdout stderr
+DATA_DIR, CONFIG_DIR, CACHE_DIR = _get_check_app_dirs()
+TMP_FILE = os.path.join(CACHE_DIR, "active_task")
+PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
+
+
 class Daemon:
     """
     A generic daemon class.

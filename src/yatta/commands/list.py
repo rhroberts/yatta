@@ -1,8 +1,7 @@
 import click
-from tabulate import tabulate
-
 import yatta.db as db
 import yatta.utils as utils
+from tabulate import tabulate
 from yatta.completion_helpers import get_matching_tasks
 
 

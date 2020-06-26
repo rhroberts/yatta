@@ -2,7 +2,6 @@ import logging
 import os
 
 import pandas as pd
-from appdirs import user_data_dir
 from sqlalchemy import (
     Column,
     DateTime,
@@ -15,11 +14,9 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from tabulate import tabulate
+from yatta.utils import time_print, _get_check_app_dirs
 
-from yatta.utils import time_print
-
-APP_NAME = "yatta"
-DATA_DIR = user_data_dir(APP_NAME)
+DATA_DIR, CONFIG_DIR, CACHE_DIR = _get_check_app_dirs()
 DB_PATH = os.path.join(DATA_DIR, "yatta.db")
 
 logger = logging.getLogger(__name__)

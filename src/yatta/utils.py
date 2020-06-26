@@ -7,8 +7,10 @@ import sys
 import time
 from datetime import datetime
 
-import yatta.db as db
+import colorama as co
 from appdirs import user_cache_dir
+
+import yatta.db as db
 
 APP_NAME = "yatta"
 CACHE_DIR = user_cache_dir(APP_NAME)
@@ -187,9 +189,15 @@ def daemon_stop():
 
 # FIXME: manually killing yatta with "kill" command doesn't remove pid file
 def daemon_status():
+    co.init(autoreset=True)
     if os.path.exists(PID_FILE):
         start, end, duration, taskname = _read_tmp_info()
-        print(f"{taskname},{start},{end},{time_print(int(duration))}")
+        print(
+            f"\n\t{co.Fore.BLUE}Active task: {co.Fore.GREEN}{taskname}"
+            + f"\n\t{co.Fore.BLUE}Start: {co.Fore.GREEN}{start}"
+            + f"\n\t{co.Fore.BLUE}Current: {co.Fore.GREEN}{end}"
+            + f"\n\t{co.Fore.BLUE}Duration: {co.Fore.GREEN}{time_print(int(duration))}"
+        )
     else:
         print("No tasks are being tracked right now.")
 

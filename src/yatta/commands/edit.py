@@ -113,5 +113,6 @@ def records(record_id):
         _record.end = end
         _record.duration = duration
         db.session.commit()
+        print(_record)
     else:
         print("No updates were specified.")

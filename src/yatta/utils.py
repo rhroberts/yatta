@@ -26,7 +26,7 @@ if not os.path.isdir(CACHE_DIR):
         logger.error(f"Failed to create directory: {CACHE_DIR}")
 
 
-# TODO: using logging, not durect stdout stderr
+# TODO: use logging, not direct stdout stderr
 class Daemon:
     """
     A generic daemon class.

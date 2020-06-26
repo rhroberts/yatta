@@ -8,18 +8,13 @@ import yatta.db as db
 from appdirs import user_cache_dir
 from pyfiglet import Figlet
 from yatta.utils import daemon_start, dummy_stopwatch
+from yatta.completion_helpers import get_matching_tasks
 
 APP_NAME = "yatta"
 CACHE_DIR = user_cache_dir(APP_NAME)
 PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 
 logger = logging.getLogger(__name__)
-
-
-# TODO: Move this to somewhere more general, implement for other relevant commands
-def get_matching_tasks(ctx, args, incomplete):
-    task_names = [task.name for task in db.get_tasks().all()]
-    return([task_name for task_name in task_names if incomplete in task_name])
 
 
 @click.command()
@@ -32,7 +27,7 @@ def get_matching_tasks(ctx, args, incomplete):
 @click.option("-b", "--background", help="Run yatta in the background.", is_flag=True)
 def start(task, tags, description, font, background, **kwargs):
     """
-    Track time spent on a task using a stopwatch.
+    Start tracking a task.
     """
     # first check if there is already a task being recorded
     if not os.path.exists(PID_FILE):

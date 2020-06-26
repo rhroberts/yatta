@@ -32,11 +32,17 @@ def main(log_level):
 
 @click.command()
 def status():
+    """
+    Check status of active task.
+    """
     daemon_status()
 
 
 @click.command()
 def stop():
+    """
+    Stop tracking the active task.
+    """
     daemon_stop()
 
 

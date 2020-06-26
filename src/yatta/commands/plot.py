@@ -31,7 +31,9 @@ cal = pdt.Calendar()
     "-c", "--columns", help="Maximum columns on screen for plot to occupy.", default=50,
 )
 def plot(period, start_date, columns):
-    # TODO: Try to order logically when plotting, e.g. by duration
+    """
+    Visualize summary data.
+    """
     start_date = datetime(*cal.parse(start_date)[0][:6])
     day_of_week = start_date.weekday()
     year, month, day = start_date.timetuple()[:3]

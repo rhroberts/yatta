@@ -29,6 +29,9 @@ cal = pdt.Calendar()
     "-s", "--start-date", help="Report data from this date onward.", default="now"
 )
 def timesheet(period, start_date):
+    """
+    View daily and weekly timesheet summary.
+    """
     start_date = datetime(*cal.parse(start_date)[0][:6])
     day_of_week = start_date.weekday()
     year, month, day = start_date.timetuple()[:3]

@@ -1,7 +1,9 @@
 import click
 from tabulate import tabulate
 
-from .. import db, utils
+import yatta.db as db
+import yatta.utils as utils
+from yatta.completion_helpers import get_matching_tasks
 
 
 @click.group()
@@ -13,7 +15,9 @@ def list():
 
 
 @list.command()
-@click.argument("task_name", required=False)
+@click.argument(
+    "task_name", required=False, type=click.STRING, autocompletion=get_matching_tasks
+)
 def tasks(task_name=None):
     """
     List all tasks or show info for a particular task.
@@ -26,7 +30,13 @@ def tasks(task_name=None):
 
 @list.command()
 @click.argument("record_id", required=False)
-@click.option("-t", "--task", help="Task name or ID to get records from.")
+@click.option(
+    "-t",
+    "--task",
+    help="Task name or ID to get records from.",
+    type=click.STRING,
+    autocompletion=get_matching_tasks,
+)
 @click.option(
     "-m",
     "--max-entries",

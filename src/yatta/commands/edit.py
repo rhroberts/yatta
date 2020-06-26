@@ -6,6 +6,8 @@ import parsedatetime as pdt
 import yatta.db as db
 from sqlalchemy.exc import IntegrityError
 
+from yatta.completion_helpers import get_matching_tasks
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,7 +20,7 @@ def edit():
 
 
 @edit.command()
-@click.argument("task_name_or_id")
+@click.argument("task_name_or_id", type=click.STRING, autocompletion=get_matching_tasks)
 @click.option("-n", "--name", help="Change the name of the task.")
 @click.option("-t", "--tags", default="", help="Add relevant tags to task.")
 @click.option("-d", "--description", default="", help="Add additional task info.")
@@ -76,11 +78,13 @@ def tasks(task_name_or_id, name=None, tags=None, description=None):
             print("No updates were specified.")
 
 
-# TODO: Catch common errors from parsedatetime
 # TODO: Add options for start and end
 @edit.command()
 @click.argument("record_id")
 def records(record_id):
+    """
+    Edit record details.
+    """
     query = db.get_records(record_id=record_id)
     _record = query.first()
     if not _record:

@@ -7,9 +7,10 @@ import click
 import yatta.db as db
 from pyfiglet import Figlet
 from yatta.completion_helpers import get_matching_tasks
-from yatta.utils import daemon_start, dummy_stopwatch, _get_check_app_dirs
+from yatta.daemon import daemon_start, dummy_stopwatch
+from yatta.utils import check_app_dirs
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = _get_check_app_dirs()
+DATA_DIR, CONFIG_DIR, CACHE_DIR = check_app_dirs()
 PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 
 logger = logging.getLogger(__name__)

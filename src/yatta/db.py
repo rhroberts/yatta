@@ -2,6 +2,7 @@ import logging
 import os
 
 import pandas as pd
+import yatta.utils as utils
 from sqlalchemy import (
     Column,
     DateTime,
@@ -14,9 +15,9 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from tabulate import tabulate
-from yatta.utils import time_print, _get_check_app_dirs
+from yatta.utils import check_app_dirs
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = _get_check_app_dirs()
+DATA_DIR, CONFIG_DIR, CACHE_DIR = check_app_dirs()
 DB_PATH = os.path.join(DATA_DIR, "yatta.db")
 
 logger = logging.getLogger(__name__)
@@ -50,13 +51,19 @@ class Task(Base):
     def __repr__(self):
         return (
             f"<Task(name={self.name}, tags={self.tags}, "
-            + f"description={self.description}, total={time_print(self.total)})>"
+            + f"description={self.description}, total={utils.time_print(self.total)})>"
         )
 
     def __str__(self):
         s = [
             ["ID", "Task", "Tags", "Description", "Total"],
-            [self.id, self.name, self.tags, self.description, time_print(self.total)],
+            [
+                self.id,
+                self.name,
+                self.tags,
+                self.description,
+                utils.time_print(self.total),
+            ],
         ]
         return tabulate(s, tablefmt="fancy_grid")
 
@@ -75,7 +82,7 @@ class Record(Base):
     def __repr__(self):
         return (
             f"<Record(task_name={self.task_name}, start={self.start} "
-            + f"end={self.start}, duration={time_print(self.duration)})>"
+            + f"end={self.start}, duration={utils.time_print(self.duration)})>"
         )
 
     def __str__(self):
@@ -87,7 +94,7 @@ class Record(Base):
                 self.task_name,
                 self.start,
                 self.end,
-                time_print(self.duration),
+                utils.time_print(self.duration),
             ],
         ]
         return tabulate(s, tablefmt="fancy_grid")

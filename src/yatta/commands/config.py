@@ -6,6 +6,8 @@ from yatta.completion_helpers import get_figlet_fonts, get_table_formats
 from yatta.config import Config
 from yatta.utils import get_app_dirs
 
+from tomlkit import dumps
+
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 
 
@@ -97,12 +99,16 @@ def background(run_in_background):
 
 
 @config.command()
-def list():
+@click.option("-d", "--defaults", is_flag=True, help="Print the default settings.")
+def list(defaults):
     """
     List current user settings.
     """
     co.init(autoreset=True)
-    print(f"\n{co.Fore.GREEN}{Config()}")
+    if defaults:
+        print(f"\n{co.Fore.BLUE}{dumps(Config().default)}")
+    else:
+        print(f"\n{co.Fore.GREEN}{Config()}")
 
 
 @config.command()

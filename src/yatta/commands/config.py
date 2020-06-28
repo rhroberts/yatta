@@ -1,7 +1,10 @@
 import os
 
 import click
+import colorama as co
 from yatta.utils import get_app_dirs
+from yatta.config import Config
+from yatta.completion_helpers import get_figlet_fonts, get_table_formats
 
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 
@@ -18,6 +21,9 @@ def config():
     "-s", "--shell", required=True, type=click.Choice(["bash", "zsh", "fish"])
 )
 def completions(shell):
+    """
+    Generate shell completes for yatta.
+    """
     home = os.environ.get("HOME")
     comp_file = os.path.join(CACHE_DIR, "_completions")
 
@@ -52,3 +58,59 @@ def completions(shell):
                 "\nYour fish completion direction is missing, please create it here:\n"
                 + f"\n{comp_dir}"
             )
+
+
+@config.command()
+@click.argument("font", type=click.STRING, autocompletion=get_figlet_fonts)
+def font(font):
+    """
+    Select figlet font for displaying stopwatch.
+    """
+    Config().set_user_value("formatting", "figlet_font", font)
+
+
+@config.command()
+@click.argument("style", type=click.STRING, autocompletion=get_table_formats)
+def tables(style):
+    """
+    Select tabulate table style.
+    """
+    Config().set_user_value("formatting", "table_style", style)
+
+
+@config.command()
+@click.argument("columns", type=click.INT)
+def plot_columns(columns):
+    """
+    Set maximum number of columns for plots.
+    """
+    Config().set_user_value("plotting", "columns", columns)
+
+
+@config.command()
+@click.argument("run_in_background", type=click.BOOL)
+def background(run_in_background):
+    """
+    Always run yatta in the background.
+    """
+    Config().set_user_value("general", "run_in_background", run_in_background)
+
+
+@config.command()
+def list():
+    """
+    List current user settings.
+    """
+    co.init(autoreset=True)
+    print(f"\n{co.Fore.GREEN}{Config()}")
+
+
+@config.command()
+@click.confirmation_option(
+    prompt="Are you sure you want to reset the application settings?"
+)
+def restore_defaults():
+    """
+    Restore settings to default values.
+    """
+    Config().restore_defaults()

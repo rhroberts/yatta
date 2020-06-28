@@ -3,6 +3,7 @@ import yatta.db as db
 import yatta.utils as utils
 from tabulate import tabulate
 from yatta.completion_helpers import get_matching_tasks
+from yatta.config import Config
 
 
 @click.group()
@@ -24,7 +25,13 @@ def tasks(task_name=None):
     query = db.get_tasks(task_name)
     _tasks = db.query_to_df(query)
     _tasks["total"] = _tasks["total"].apply(utils.time_print)
-    print(tabulate(_tasks, headers=_tasks.columns, tablefmt="fancy_grid"))
+    print(
+        tabulate(
+            _tasks,
+            headers=_tasks.columns,
+            tablefmt=Config().get_user_value("formatting", "table_style"),
+        )
+    )
 
 
 @list.command()
@@ -52,4 +59,10 @@ def records(all, max_entries, record_id=None, task=None):
     if not all:
         _records = _records.tail(max_entries)
     _records["duration"] = _records["duration"].apply(utils.time_print)
-    print(tabulate(_records, headers=_records.columns, tablefmt="fancy_grid"))
+    print(
+        tabulate(
+            _records,
+            headers=_records.columns,
+            tablefmt=Config().get_user_value("formatting", "table_style"),
+        )
+    )

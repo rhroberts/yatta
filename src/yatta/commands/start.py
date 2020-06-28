@@ -9,6 +9,7 @@ from pyfiglet import Figlet
 from yatta.completion_helpers import get_matching_tasks
 from yatta.daemon import daemon_start, dummy_stopwatch
 from yatta.utils import get_app_dirs
+from yatta.config import Config
 
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
@@ -41,8 +42,8 @@ def start(task, tags, description, font, background, **kwargs):
             db.session.commit()
         else:
             task = query.first()
-        font = Figlet(font=font)
-        if background:
+        font = Figlet(font=Config().get_user_value("formatting", "figlet_font"))
+        if background or Config().get_user_value("general", "run_in_background"):
             daemon_start(task.name)
         else:
             Process(target=daemon_start, args=(task.name,)).start()

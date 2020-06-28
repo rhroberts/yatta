@@ -5,6 +5,7 @@ import click
 import parsedatetime as pdt
 import yatta.db as db
 import yatta.plotting as plt
+from yatta.config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,11 @@ cal = pdt.Calendar()
     "-s", "--start-date", help="Plot data from this date onward.", default="now"
 )
 @click.option(
-    "-c", "--columns", help="Maximum columns on screen for plot to occupy.", default=50,
+    "-c",
+    "--columns",
+    type=click.INT,
+    help="Maximum columns on screen for plot to occupy.",
+    default=Config().get_user_value("plotting", "columns"),
 )
 def plot(period, start_date, columns):
     """

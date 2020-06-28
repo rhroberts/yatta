@@ -7,6 +7,7 @@ import yatta.db as db
 from tabulate import tabulate
 from yatta.plotting import _preproc_data, _weekday_to_label
 from yatta.utils import time_print
+from yatta.config import Config
 
 logger = logging.getLogger(__name__)
 cal = pdt.Calendar()
@@ -52,13 +53,25 @@ def timesheet(period, start_date):
             data["TOTAL"] = data.sum(axis=1)
             for col in data:
                 data[col] = data[col].apply(time_print)
-            print(tabulate(data, headers=data.columns, tablefmt="fancy_grid"))
+            print(
+                tabulate(
+                    data,
+                    headers=data.columns,
+                    tablefmt=Config().get_user_value("formatting", "table_style"),
+                )
+            )
         elif period == "week":
             data["TOTAL"] = data.sum(axis=1)
             data.loc["TOTAL"] = data.sum()
             for col in data:
                 data[col] = data[col].apply(time_print)
-            print(tabulate(data, headers=data.columns, tablefmt="fancy_grid"))
+            print(
+                tabulate(
+                    data,
+                    headers=data.columns,
+                    tablefmt=Config().get_user_value("formatting", "table_style"),
+                )
+            )
         else:
             logger.error("Invalid timesheet period!")
     else:

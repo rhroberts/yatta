@@ -16,6 +16,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from tabulate import tabulate
 from yatta.utils import get_app_dirs
+from yatta.config import Config
 
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 DB_PATH = os.path.join(DATA_DIR, "yatta.db")
@@ -65,7 +66,9 @@ class Task(Base):
                 utils.time_print(self.total),
             ],
         ]
-        return tabulate(s, tablefmt="fancy_grid")
+        return tabulate(
+            s, tablefmt=Config().get_user_value("formatting", "table_style")
+        )
 
 
 class Record(Base):
@@ -97,7 +100,9 @@ class Record(Base):
                 utils.time_print(self.duration),
             ],
         ]
-        return tabulate(s, tablefmt="fancy_grid")
+        return tabulate(
+            s, tablefmt=Config().get_user_value("formatting", "table_style")
+        )
 
 
 # add the above mappings to database, if they don't already exist

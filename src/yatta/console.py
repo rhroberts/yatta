@@ -4,7 +4,7 @@ import logging
 import click
 import yatta.utils as utils
 from yatta.commands import config, delete, edit, list, plot, start, timesheet
-from yatta.daemon import daemon_stop, daemon_status
+from yatta.daemon import daemon_status, daemon_stop
 
 try:
     from importlib import metadata

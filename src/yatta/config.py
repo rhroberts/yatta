@@ -1,7 +1,7 @@
-import os
-from tomlkit import parse, dumps, document, table
 import logging
+import os
 
+from tomlkit import document, dumps, parse, table
 from yatta.utils import get_app_dirs
 
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()

@@ -2,9 +2,9 @@ import os
 
 import click
 import colorama as co
-from yatta.utils import get_app_dirs
-from yatta.config import Config
 from yatta.completion_helpers import get_figlet_fonts, get_table_formats
+from yatta.config import Config
+from yatta.utils import get_app_dirs
 
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 

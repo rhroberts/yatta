@@ -1,10 +1,10 @@
 import atexit
 import curses
-from datetime import datetime
 import os
 import signal
 import sys
 import time
+from datetime import datetime
 
 import colorama as co
 import yatta.db as db

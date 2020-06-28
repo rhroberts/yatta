@@ -15,8 +15,8 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from tabulate import tabulate
-from yatta.utils import get_app_dirs
 from yatta.config import Config
+from yatta.utils import get_app_dirs
 
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 DB_PATH = os.path.join(DATA_DIR, "yatta.db")

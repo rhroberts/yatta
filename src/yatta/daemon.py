@@ -1,6 +1,6 @@
 import atexit
 import curses
-import datetime
+from datetime import datetime
 import os
 import signal
 import sys
@@ -10,13 +10,13 @@ import colorama as co
 import yatta.db as db
 from yatta.utils import (
     _read_tmp_info,
-    check_app_dirs,
+    get_app_dirs,
     stopwatch,
     time_figlet_print,
     time_print,
 )
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = check_app_dirs()
+DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 TMP_FILE = os.path.join(CACHE_DIR, "active_task")
 PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 

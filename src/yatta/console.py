@@ -4,6 +4,7 @@ import logging
 import click
 import yatta.utils as utils
 from yatta.commands import config, delete, edit, list, plot, start, timesheet
+from yatta.daemon import daemon_stop, daemon_status
 
 try:
     from importlib import metadata
@@ -11,7 +12,7 @@ except ImportError:  # for Python < 3.8
     import importlib_metadata as metadata
 
 APP_NAME = "yatta"
-DATA_DIR, CONFIG_DIR, CACHE_DIR = utils.check_app_dirs()
+DATA_DIR, CONFIG_DIR, CACHE_DIR = utils.get_app_dirs()
 
 CLICK_CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"],)
 
@@ -34,7 +35,7 @@ def status():
     """
     Check status of active task.
     """
-    utils.daemon_status()
+    daemon_status()
 
 
 @click.command()
@@ -42,7 +43,7 @@ def stop():
     """
     Stop tracking the active task.
     """
-    utils.daemon_stop()
+    daemon_stop()
 
 
 # add cli commands and command groups to main

@@ -1,9 +1,9 @@
 import os
 
 import click
-from yatta.utils import check_app_dirs
+from yatta.utils import get_app_dirs
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = check_app_dirs()
+DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 
 
 @click.group()

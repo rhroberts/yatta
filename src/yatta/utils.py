@@ -13,7 +13,7 @@ PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 logger = logging.getLogger(__name__)
 
 
-def check_app_dirs():
+def get_app_dirs():
     """
     Make sure common app directories exists, create them if not
     """

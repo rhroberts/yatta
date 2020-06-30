@@ -18,6 +18,7 @@ def edit():
     pass
 
 
+# FIXME: #12 Renaming task does not update task_name for all corresponding records
 @edit.command()
 @click.argument("task_name_or_id", type=click.STRING, autocompletion=get_matching_tasks)
 @click.option("-n", "--name", help="Change the name of the task.")

@@ -18,8 +18,7 @@ class Config(object):
     default_dict = {
         "general": {"run_in_background": "false"},
         "formatting": {"figlet_font": "doom", "table_style": "pretty"},
-        "plotting": {"columns": 75},
-        "test": {"fake": "true"},
+        "plotting": {"columns": 75, "show_legend": "true"},
     }
 
     def __init__(self):
@@ -42,8 +41,10 @@ class Config(object):
             for category, settings in self.default_dict.items():
                 if category not in config.keys():
                     config.add(category, table())
+                else:
                     for setting, value in settings.items():
-                        config[category][setting] = value
+                        if setting not in config[category].keys():
+                            config[category][setting] = value
             # remove deprecated settings
             for category, settings in config.items():
                 # remove deprecated tables

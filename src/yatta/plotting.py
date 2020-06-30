@@ -211,7 +211,7 @@ def hbar(data, columns=50):
         )
 
 
-def hbar_stack(data, columns=50, show_legend=False):
+def hbar_stack(data, columns=50, show_legend=True):
     """
     Print horizontal bar chart to stdout.
 

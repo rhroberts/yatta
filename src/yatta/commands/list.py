@@ -26,7 +26,8 @@ def tasks(task_name=None):
     _tasks = db.query_to_df(query)
     _tasks["total"] = _tasks["total"].apply(utils.time_print)
     print(
-        tabulate(
+        "\n"
+        + tabulate(
             _tasks,
             headers=_tasks.columns,
             tablefmt=Config().get_user_value("formatting", "table_style"),
@@ -60,7 +61,8 @@ def records(all, max_entries, record_id=None, task=None):
         _records = _records.tail(max_entries)
     _records["duration"] = _records["duration"].apply(utils.time_print)
     print(
-        tabulate(
+        "\n"
+        + tabulate(
             _records,
             headers=_records.columns,
             tablefmt=Config().get_user_value("formatting", "table_style"),

@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 cal = pdt.Calendar()
 
 
-# FIXME: Something's up with the weekly timesheet
 @click.command()
 @click.option(
     "-d", "--day", "period", help="Print today's timesheet.", flag_value="day",
@@ -54,7 +53,8 @@ def timesheet(period, start_date):
             for col in data:
                 data[col] = data[col].apply(time_print)
             print(
-                tabulate(
+                "\n"
+                + tabulate(
                     data,
                     headers=data.columns,
                     tablefmt=Config().get_user_value("formatting", "table_style"),
@@ -66,7 +66,8 @@ def timesheet(period, start_date):
             for col in data:
                 data[col] = data[col].apply(time_print)
             print(
-                tabulate(
+                "\n"
+                + tabulate(
                     data,
                     headers=data.columns,
                     tablefmt=Config().get_user_value("formatting", "table_style"),

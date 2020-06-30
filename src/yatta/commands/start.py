@@ -43,7 +43,10 @@ def start(task, tags, description, font, background, **kwargs):
         else:
             task = query.first()
         font = Figlet(font=Config().get_user_value("formatting", "figlet_font"))
-        if background or Config().get_user_value("general", "run_in_background"):
+        if (
+            background
+            or Config().get_user_value("general", "run_in_background") == "true"
+        ):
             daemon_start(task.name)
         else:
             Process(target=daemon_start, args=(task.name,)).start()

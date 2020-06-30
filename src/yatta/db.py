@@ -23,15 +23,6 @@ DB_PATH = os.path.join(DATA_DIR, "yatta.db")
 
 logger = logging.getLogger(__name__)
 
-# make sure app directory exists, create it if not
-if not os.path.isdir(DATA_DIR):
-    try:
-        os.mkdir(DATA_DIR)
-        # FIXME: this isn't showing up in logs
-        logger.debug(f"Created data directory: {DATA_DIR}")
-    except OSError:
-        logger.error(f"Failed to create directory: {DATA_DIR}")
-
 engine = create_engine(f"sqlite:///{DB_PATH}", echo=False)
 Sessionmkr = sessionmaker(bind=engine)
 session = Sessionmkr()
@@ -56,8 +47,8 @@ class Task(Base):
         )
 
     def __str__(self):
-        s = [
-            ["ID", "Task", "Tags", "Description", "Total"],
+        headers = ["ID", "Task", "Tags", "Description", "Total"]
+        data = [
             [
                 self.id,
                 self.name,
@@ -66,8 +57,10 @@ class Task(Base):
                 utils.time_print(self.total),
             ],
         ]
-        return tabulate(
-            s, tablefmt=Config().get_user_value("formatting", "table_style")
+        return "\n" + tabulate(
+            data,
+            headers=headers,
+            tablefmt=Config().get_user_value("formatting", "table_style"),
         )
 
 
@@ -89,8 +82,8 @@ class Record(Base):
         )
 
     def __str__(self):
+        h = ["record_id", "task_id", "task", "start", "end", "duration"]
         s = [
-            ["Record ID", "Task ID", "Task", "Start", "End", "Duration"],
             [
                 self.id,
                 self.task_id,
@@ -100,8 +93,8 @@ class Record(Base):
                 utils.time_print(self.duration),
             ],
         ]
-        return tabulate(
-            s, tablefmt=Config().get_user_value("formatting", "table_style")
+        return "\n" + tabulate(
+            s, headers=h, tablefmt=Config().get_user_value("formatting", "table_style"),
         )
 
 

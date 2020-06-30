@@ -4,6 +4,7 @@ import os
 import signal
 import sys
 import time
+import logging
 from datetime import datetime
 
 import colorama as co
@@ -19,6 +20,8 @@ from yatta.utils import (
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 TMP_FILE = os.path.join(CACHE_DIR, "active_task")
 PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
+
+logger = logging.getLogger(__name__)
 
 
 class Daemon:
@@ -172,14 +175,15 @@ def daemon_stop():
     task = db.get_tasks(taskname).first()
     db.add_record(task, record)
     db.update_task_total(task)
+    co.init(autoreset=True)
     print(
-        f"\nWorked on {task.name} for {record.duration/3600:.2f}"
+        f"\n{co.Fore.GREEN}Worked on {task.name} for {record.duration/3600:.2f}"
         + f"hrs ({time_print(record.duration)}) \u2714"
     )
     os.remove(TMP_FILE)
 
 
-# FIXME: manually killing yatta with "kill" command doesn't remove pid file
+# FIXME: #10 manually killing yatta with "kill" command doesn't remove pid file
 def daemon_status():
     co.init(autoreset=True)
     if os.path.exists(PID_FILE):
@@ -206,15 +210,19 @@ def dummy_stopwatch(taskname, font):
         curses.use_default_colors()
         curses.curs_set(0)
         stdscr.timeout(0)
-        # FIXME: #7 this errors out if text overflows terminal
-        stdscr.addstr(font.renderText(taskname))
+        try:
+            stdscr.addstr(font.renderText(taskname))
+        except curses.error as e:
+            stdscr.clear()
+            stdscr.addstr(font.renderText(taskname[:11] + "..."))
+            logger.warning(e)
         start_time = datetime.now()
         while os.path.exists(PID_FILE):
             count = int(time.time() - start_time.timestamp())
             stdscr.insstr(time_figlet_print(font, count))
             ch = stdscr.getch()
             stdscr.refresh()
-            # FIXME: task summary is printed awkwardly over curses
+            # FIXME: #11 task summary is printed awkwardly over curses
             # text on task completion
             if ch == QUIT_KEY:
                 daemon_stop()

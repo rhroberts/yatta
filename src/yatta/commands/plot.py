@@ -35,10 +35,14 @@ cal = pdt.Calendar()
     help="Maximum columns on screen for plot to occupy.",
     default=Config().get_user_value("plotting", "columns"),
 )
-def plot(period, start_date, columns):
+@click.option("--show-legend", is_flag=True, default=True)
+def plot(period, start_date, columns, show_legend):
     """
     Visualize summary data.
     """
+    # check if user wants to always show legend, change show_legend accordingly
+    if not Config().user["plotting"]["show_legend"]:
+        show_legend = False
     start_date = datetime(*cal.parse(start_date)[0][:6])
     day_of_week = start_date.weekday()
     year, month, day = start_date.timetuple()[:3]
@@ -57,9 +61,9 @@ def plot(period, start_date, columns):
         if period == "day":
             plt.hbar(data, columns)
         elif period == "week":
-            plt.hbar_stack(data, columns)
+            plt.hbar_stack(data, columns, show_legend)
         elif period == "month":
-            plt.hbar_stack(data, columns)
+            plt.hbar_stack(data, columns, show_legend)
         else:
             logger.error("Invalid plot period!")
     else:

@@ -73,7 +73,7 @@ def font(font):
 
 @config.command()
 @click.argument("style", type=click.STRING, autocompletion=get_table_formats)
-def tables(style):
+def table_style(style):
     """
     Select tabulate table style.
     """
@@ -96,6 +96,15 @@ def background(run_in_background):
     Always run yatta in the background.
     """
     Config().set_user_value("general", "run_in_background", run_in_background)
+
+
+@config.command()
+@click.argument("show", type=click.BOOL)
+def show_legend(show):
+    """
+    Always display a legend with applicable plots.
+    """
+    Config().set_user_value("plotting", "show_legend", show_legend)
 
 
 @config.command()

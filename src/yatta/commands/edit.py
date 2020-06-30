@@ -49,7 +49,6 @@ def tasks(task_name_or_id, name=None, tags=None, description=None):
                 return
         if tags:
             _task.tags = tags
-            # TODO: is there a better way to handle this?
             db.session.commit()
         if description:
             _task.description = description
@@ -77,10 +76,11 @@ def tasks(task_name_or_id, name=None, tags=None, description=None):
             print("No updates were specified.")
 
 
-# TODO: Add options for start and end
 @edit.command()
 @click.argument("record_id")
-def records(record_id):
+@click.option("-s", "--start-time", help="Time when task was started.")
+@click.option("-e", "--end-time", help="Time when the task was stopped.")
+def records(record_id, start_time=None, end_time=None):
     """
     Edit record details.
     """
@@ -89,29 +89,37 @@ def records(record_id):
     if not _record:
         print(f"Record with ID '{record_id}' does not exist.")
 
-    MARKER = (
-        "\n\n-----\nFORMAT: START,END\n"
-        + "EXAMPLES:\n\t2020-03-21 13:01:00,2020-03-21 14:01:00\n"
-        + "\tToday at noon,now\n"
-        + "START and END must be interpretable by: "
-        + "https://github.com/bear/parsedatetime\n-----"
-    )
-    record_str = f"{_record.start},{_record.end}{MARKER}"
-    updates = click.edit(record_str)
-    # TODO: error handling for datetime formats, ensure END is after START
-    if updates:
-        start, end = updates.split(MARKER)[0].strip().split(",")
-        cal = pdt.Calendar()
-        start = datetime(*cal.parse(start)[0][:6])
-        end = datetime(*cal.parse(end)[0][:6])
-        duration = (end - start).seconds
-        if end < start:
-            logger.error("End time is before start time. No changes have been made.")
+    cal = pdt.Calendar()
+    if start_time:
+        start = datetime(*cal.parse(start_time)[0][:6])
+        end = _record.end
+    if end_time:
+        end = datetime(*cal.parse(end_time)[0][:6])
+        start = _record.start
+    if not start_time and not end_time:
+        MARKER = (
+            "\n\n-----\nFORMAT: START,END\n"
+            + "EXAMPLES:\n\t2020-03-21 13:01:00,2020-03-21 14:01:00\n"
+            + "\tToday at noon,now\n"
+            + "START and END must be interpretable by: "
+            + "https://github.com/bear/parsedatetime\n-----"
+        )
+        record_str = f"{_record.start},{_record.end}{MARKER}"
+        updates = click.edit(record_str)
+        if updates:
+            start, end = updates.split(MARKER)[0].strip().split(",")
+            start = datetime(*cal.parse(start)[0][:6])
+            end = datetime(*cal.parse(end)[0][:6])
+        else:
+            print("No updates were specified.")
             return
-        _record.start = start
-        _record.end = end
-        _record.duration = duration
-        db.session.commit()
-        print(_record)
-    else:
-        print("No updates were specified.")
+
+    duration = (end - start).seconds
+    if end < start:
+        logger.error("End time is before start time. No changes have been made.")
+        return
+    _record.start = start
+    _record.end = end
+    _record.duration = duration
+    db.session.commit()
+    print(_record)

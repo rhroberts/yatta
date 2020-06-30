@@ -16,6 +16,8 @@ pip install yatta
 
 ## Usage
 
+[![asciicast](https://asciinema.org/a/9jx1Vu7JwV2MeUKVVtW7cqu4Z.svg)](https://asciinema.org/a/9jx1Vu7JwV2MeUKVVtW7cqu4Z)
+
 There are two main components of yatta: task and records. Tasks are what you track. They are unique and reusable. Information about tracked tasks are stored as records. In general, the format of a yatta command is `yatta [COMMAND] [TASKS/RECORDS] [FILTER]`. For example, the command `yatta list records -t "Write README.md"` lists all records for the task "Write README.md". The `track` command is the main exception to this format, and it is specific to tasks. All other commands can be applied to both tasks and records.
 
 ### Starting and stopping tasks

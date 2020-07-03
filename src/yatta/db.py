@@ -60,6 +60,7 @@ class Task(Base):
         "Record",
         primaryjoin="and_(Task.id == Record.task_id, Task.name == Record.task_name)",
         lazy="dynamic",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self):

@@ -30,14 +30,7 @@ def tasks(task_name_or_id):
             print(f"Task '{name_id}' does not exist.")
             return
         try:
-            # delete records associated with task in records table
-            # this must be done *before* deleted the task itself
-            # not being handled properly w/ cascade, so doing it manually for now
-            query = db.get_records(task_name_or_id=name_id)
-            _records = query.all()
-            for _record in _records:
-                db.delete_record(_record)
-            # delete task from tasks table
+            # delete task from tasks table; cascade delete associated records
             db.delete_task(_task)
             print(f"Deleted task {name_id}!")
         except Exception as e:

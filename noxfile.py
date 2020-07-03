@@ -12,7 +12,7 @@ def tests(session):
     session.run("pytest", external=True, *args)
 
 
-@nox.session(python=["3.8", "3.7"])
+@nox.session(python="3.8")
 def lint(session):
     args = session.posargs or locations
     session.install("flake8", "flake8-black")
@@ -27,14 +27,14 @@ def coverage(session):
     session.run("codecov", *session.posargs)
 
 
-@nox.session(python=["3.8", "3.7"])
+@nox.session(python="3.8")
 def black(session):
     args = session.posargs or locations
     session.install("black")
     session.run("black", *args)
 
 
-@nox.session(python=["3.8", "3.7"])
+@nox.session(python="3.8")
 def isort(session):
     args = session.posargs or locations
     session.install("isort")

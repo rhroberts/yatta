@@ -11,9 +11,11 @@ from sqlalchemy import (
     String,
     create_engine,
     func,
+    event,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.engine import Engine
 from tabulate import tabulate
 from yatta.config import Config
 from yatta.utils import get_app_dirs
@@ -27,6 +29,13 @@ engine = create_engine(f"sqlite:///{DB_PATH}", echo=False)
 Sessionmkr = sessionmaker(bind=engine)
 session = Sessionmkr()
 Base = declarative_base()
+
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 
 # define tables / db objects

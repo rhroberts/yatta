@@ -32,6 +32,7 @@ def tasks(task_name_or_id):
         try:
             # delete records associated with task in records table
             # this must be done *before* deleted the task itself
+            # not being handled properly w/ cascade, so doing it manually for now
             query = db.get_records(task_name_or_id=name_id)
             _records = query.all()
             for _record in _records:

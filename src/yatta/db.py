@@ -20,6 +20,14 @@ from tabulate import tabulate
 from yatta.config import Config
 from yatta.utils import get_app_dirs
 
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
+
+
 DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
 DB_PATH = os.path.join(DATA_DIR, "yatta.db")
 
@@ -42,12 +50,17 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 class Task(Base):
     __tablename__ = "tasks"
     # __table_args__ = {'extend_existing': True}
-    id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     tags = Column(String)
     description = Column(String)
-    records = relationship("Record", back_populates="task")
     total = Column(Integer)
+
+    records = relationship(
+        "Record",
+        primaryjoin="and_(Task.id == Record.task_id, Task.name == Record.task_name)",
+        lazy="dynamic",
+    )
 
     def __repr__(self):
         return (
@@ -75,14 +88,16 @@ class Task(Base):
 
 class Record(Base):
     __tablename__ = "records"
-    id = Column(Integer, primary_key=True)
-    task_name = Column(String, nullable=False, unique=False)
-    task_id = Column(Integer, ForeignKey("tasks.id"))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    task_id = Column(
+        String, ForeignKey("tasks.id", onupdate="cascade", ondelete="cascade")
+    )
+    task_name = Column(
+        String, ForeignKey("tasks.name", onupdate="cascade", ondelete="cascade")
+    )
     start = Column(DateTime, nullable=False)
     end = Column(DateTime, nullable=False)
     duration = Column(Integer, nullable=False)
-
-    task = relationship("Task", back_populates="records")
 
     def __repr__(self):
         return (

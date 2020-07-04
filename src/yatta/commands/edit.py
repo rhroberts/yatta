@@ -19,7 +19,6 @@ def edit():
     pass
 
 
-# FIXME: #12 Renaming task does not update task_name for all corresponding records
 @edit.command()
 @click.argument("task_name_or_id", type=click.STRING, autocompletion=get_matching_tasks)
 @click.option("-n", "--name", help="Change the name of the task.")
@@ -51,6 +50,7 @@ def tasks(task_name_or_id, name=None, tags=None, description=None):
                 return
         if tags:
             _task.tags = tags
+            # TODO: is there a better way to handle this?
             db.session.commit()
         if description:
             _task.description = description
@@ -78,6 +78,7 @@ def tasks(task_name_or_id, name=None, tags=None, description=None):
             print("No updates were specified.")
 
 
+# TODO: Catch common errors from parsedatetime
 @edit.command()
 @click.argument("record_id")
 @click.option("-s", "--start-time", help="Time when task was started.")

@@ -37,17 +37,8 @@ Alternatively, you can manually install the dependencies in [pyproject.toml](htt
 
 - **v1.0.0**
   - WebDAV sync ([#5](https://github.com/rhroberts/yatta/issues/5))
-  - Local web server front-end
+  - Optional web front-end
   - Calendar-like plots
-
-- **v0.2.0**
-  - [x] "Timesheets" w/ per-task summary
-    - Daily, Weekly
-  - [x] In-terminal visualization of summary statisitcs
-    - Daily, Weekly, Monthly
-  - [x] Fix for [#2](https://github.com/rhroberts/yatta/issues/2)
-  - [x] Tab completion
-  - [x] Config management
 
 ## Usage
 
@@ -173,7 +164,7 @@ typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
   nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
   node_version            # node.js version
-  yatta 		  # yatta active task info
+  yatta                   # yatta active task info
 )
 
 ...
@@ -191,5 +182,5 @@ function prompt_yatta() {
 }
 ```
 
-![](./assets/p10k_prompt.png)
+![p10k_prompt.png](./assets/p10k_prompt.png)
 

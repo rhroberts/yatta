@@ -3,6 +3,7 @@ import os
 import click
 import colorama as co
 from tomlkit import dumps
+
 from yatta.completion_helpers import get_figlet_fonts, get_table_formats
 from yatta.config import Config
 from yatta.utils import get_app_dirs

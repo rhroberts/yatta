@@ -2,8 +2,9 @@
 Functions to generate custom tab completions for click.
 """
 import tabulate
-import yatta.db as db
 from pyfiglet import Figlet
+
+from yatta import db as db
 from yatta.config import Config
 
 

@@ -4,8 +4,9 @@ import time
 from multiprocessing import Process
 
 import click
-import yatta.db as db
 from pyfiglet import Figlet
+
+from yatta import db as db
 from yatta.completion_helpers import get_matching_tasks
 from yatta.config import Config
 from yatta.daemon import daemon_start, dummy_stopwatch

@@ -2,7 +2,8 @@
 import logging
 
 import click
-import yatta.utils as utils
+
+from yatta import utils as utils
 from yatta.commands import config, delete, edit, list, plot, start, timesheet
 from yatta.daemon import daemon_status, daemon_stop
 

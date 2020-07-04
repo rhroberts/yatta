@@ -4,8 +4,9 @@ from datetime import datetime
 
 import click
 import parsedatetime as pdt
-import yatta.db as db
 from tabulate import tabulate
+
+from yatta import db as db
 from yatta.config import Config
 from yatta.plotting import _preproc_data, _weekday_to_label
 from yatta.utils import time_print

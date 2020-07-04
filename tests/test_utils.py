@@ -1,6 +1,7 @@
 # unit tests for the utils module
 import pyfiglet
-import yatta.utils as utils
+
+from yatta import utils as utils
 
 
 def test_time_div():

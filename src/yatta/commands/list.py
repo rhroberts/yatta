@@ -1,7 +1,8 @@
 import click
-import yatta.db as db
-import yatta.utils as utils
 from tabulate import tabulate
+
+from yatta import db as db
+from yatta import utils as utils
 from yatta.completion_helpers import get_matching_tasks
 from yatta.config import Config
 

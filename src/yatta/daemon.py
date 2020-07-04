@@ -8,7 +8,8 @@ import time
 from datetime import datetime
 
 import colorama as co
-import yatta.db as db
+
+from yatta import db as db
 from yatta.utils import (
     _read_tmp_info,
     get_app_dirs,

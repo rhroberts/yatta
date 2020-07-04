@@ -1,7 +1,7 @@
 # unit tests for the console module
-
 import pytest
 from click.testing import CliRunner
+
 from yatta.console import main
 
 

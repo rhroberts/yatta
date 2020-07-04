@@ -2,7 +2,6 @@ import logging
 import os
 
 import pandas as pd
-import yatta.utils as utils
 from sqlalchemy import (
     Column,
     DateTime,
@@ -17,6 +16,8 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from tabulate import tabulate
+
+from yatta import utils as utils
 from yatta.config import Config
 from yatta.utils import get_app_dirs
 

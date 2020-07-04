@@ -4,8 +4,9 @@ from datetime import datetime
 
 import click
 import parsedatetime as pdt
-import yatta.db as db
-import yatta.plotting as plt
+
+from yatta import db as db
+from yatta import plotting as plt
 from yatta.config import Config
 
 logger = logging.getLogger(__name__)

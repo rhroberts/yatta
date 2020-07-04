@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 import colorama as co
 import numpy as np
 import pandas as pd
-import yatta.utils as utils
+
+from yatta import utils as utils
 
 logger = logging.getLogger(__name__)
 

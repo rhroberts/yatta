@@ -38,4 +38,4 @@ def black(session):
 def isort(session):
     args = session.posargs or locations
     session.install("isort")
-    session.run("isort", "-rc", *args)
+    session.run("isort", *args)

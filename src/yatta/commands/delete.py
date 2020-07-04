@@ -1,7 +1,8 @@
 import logging
 
 import click
-import yatta.db as db
+
+from yatta import db as db
 from yatta.completion_helpers import get_matching_tasks
 
 logger = logging.getLogger(__name__)

@@ -12,6 +12,8 @@ Inspired by [termdown](https://github.com/trehn/termdown),
 [timetrack](https://www.flathub.org/apps/details/net.danigm.timetrack),
 [timewarrior](https://timewarrior.net/). It is not yet very stable.
 
+[![asciicast](https://asciinema.org/a/MZ8Vajjhhhrt9fHEZfao3VFVQ.svg)](https://asciinema.org/a/MZ8Vajjhhhrt9fHEZfao3VFVQ)
+
 ## Installation
 
 ```bash

@@ -1,4 +1,5 @@
 import logging
+from calendar import monthrange
 from datetime import datetime
 
 import click
@@ -49,7 +50,18 @@ def plot(period, start_date, columns, show_legend):
     if period == "day":
         start_date = datetime(year, month, day)
     elif period == "week":
-        start_date = datetime(year, month, day - day_of_week)
+        # week straddles two months
+        if day_of_week > day:
+            diff = day_of_week - day
+            month = month - 1
+            # week straddles two years
+            if month == 0:
+                month = 12
+                year = year - 1
+            day = monthrange(year, month)[1] - diff
+            start_date = datetime(year, month, day)
+        else:
+            start_date = datetime(year, month, day - day_of_week)
     elif period == "month":
         start_date = datetime(year, month, 1)
     else:

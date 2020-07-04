@@ -96,3 +96,8 @@ def _read_tmp_info():
         end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S.%f")
         duration = int(duration)
     return (start, end, duration, taskname)
+
+
+def _last_day_of_month(any_day):
+    next_month = any_day.replace(28) + datetime.timedelta(days=4)
+    return next_month - datetime.timedelta(days=next_month.day)

@@ -1,10 +1,10 @@
 import atexit
 import curses
+import logging
 import os
 import signal
 import sys
 import time
-import logging
 from datetime import datetime
 
 import colorama as co

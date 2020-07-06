@@ -10,7 +10,7 @@ license = "GPL-3.0-or-later"
 yatta = 'yatta.console:main'
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6.1"
 click = "^7.1.2"
 pyfiglet = "^0.8.post1"
 appdirs = "^1.4.4"

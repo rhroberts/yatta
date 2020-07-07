@@ -1,7 +1,6 @@
 .coverage
 coverage.xml
 .nox
-.python_version
 .pytest_cache
 dist/
 *.egg-info

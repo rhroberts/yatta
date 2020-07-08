@@ -724,7 +724,7 @@ version = "0.2.5"
 [[package]]
 category = "main"
 description = "Support for the standard curses module on Windows"
-marker = "sys_platform == \"Windows\""
+marker = "sys_platform == \"win32\""
 name = "windows-curses"
 optional = false
 python-versions = "*"
@@ -743,7 +743,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "9b6a698c22de0d3bf365d5ea70a9a8a91a4742010c8c77b6a5581719c654e658"
+content-hash = "c47098724b7a53b22830d61fa6ccf2b2b08ddb57f0004e4f74c56eae498988f7"
 python-versions = "^3.6.1"
 
 [metadata.files]

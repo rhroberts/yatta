@@ -21,7 +21,7 @@ parsedatetime = "^2.5"
 importlib-metadata = "^1.6.0"
 colorama = "^0.4.3"
 tomlkit = "^0.6.0"
-windows-curses = {version = "^2.1.0", platform = "Windows"}
+windows-curses = {version = "^2.1.0", platform = "win32"}
 
 [tool.poetry.dev-dependencies]
 nox = "^2019.11.9"

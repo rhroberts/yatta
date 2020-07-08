@@ -693,11 +693,11 @@ description = "Virtual Python Environment builder"
 name = "virtualenv"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
-version = "20.0.25"
+version = "20.0.26"
 
 [package.dependencies]
 appdirs = ">=1.4.3,<2"
-distlib = ">=0.3.0,<1"
+distlib = ">=0.3.1,<1"
 filelock = ">=3.0.0,<4"
 six = ">=1.9.0,<2"
 
@@ -723,6 +723,15 @@ version = "0.2.5"
 
 [[package]]
 category = "main"
+description = "Support for the standard curses module on Windows"
+marker = "sys_platform == \"Windows\""
+name = "windows-curses"
+optional = false
+python-versions = "*"
+version = "2.1.0"
+
+[[package]]
+category = "main"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 name = "zipp"
 optional = false
@@ -734,7 +743,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "f6fe1ba53466a0c52e28e9a8a38448131f9214e236f297d48261f608b41095d4"
+content-hash = "9b6a698c22de0d3bf365d5ea70a9a8a91a4742010c8c77b6a5581719c654e658"
 python-versions = "^3.6.1"
 
 [metadata.files]
@@ -1113,12 +1122,24 @@ urllib3 = [
     {file = "urllib3-1.25.9.tar.gz", hash = "sha256:3018294ebefce6572a474f0604c2021e33b3fd8006ecd11d62107a5d2a963527"},
 ]
 virtualenv = [
-    {file = "virtualenv-20.0.25-py2.py3-none-any.whl", hash = "sha256:ffffcb3c78a671bb3d590ac3bc67c081ea2188befeeb058870cba13e7f82911b"},
-    {file = "virtualenv-20.0.25.tar.gz", hash = "sha256:f332ba0b2dfbac9f6b1da9f11224f0036b05cdb4df23b228527c2a2d5504aeed"},
+    {file = "virtualenv-20.0.26-py2.py3-none-any.whl", hash = "sha256:c11a475400e98450403c0364eb3a2d25d42f71cf1493da64390487b666de4324"},
+    {file = "virtualenv-20.0.26.tar.gz", hash = "sha256:e10cc66f40cbda459720dfe1d334c4dc15add0d80f09108224f171006a97a172"},
 ]
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
     {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
+]
+windows-curses = [
+    {file = "windows_curses-2.1.0-cp27-cp27m-win32.whl", hash = "sha256:89a6d973f88cfe49b41ea80164dcbec209d296e0cec34a02002578b0bf464a64"},
+    {file = "windows_curses-2.1.0-cp27-cp27m-win_amd64.whl", hash = "sha256:9e474a181f96d60429a4766145628264e60b72e7715876f9135aeb2e842f9433"},
+    {file = "windows_curses-2.1.0-cp35-cp35m-win32.whl", hash = "sha256:73bd3eebccfda55330783f165151de115bfa238d1332f0b2e224b550d6187840"},
+    {file = "windows_curses-2.1.0-cp35-cp35m-win_amd64.whl", hash = "sha256:cfe64c30807c146ef8d094412f90f2a2c81ad6aefff3ebfe8e37aabe2f801303"},
+    {file = "windows_curses-2.1.0-cp36-cp36m-win32.whl", hash = "sha256:669caad3ae16faf2d201d7ab3b8af418a2fd074d8a39d60ca26f3acb34b6afe5"},
+    {file = "windows_curses-2.1.0-cp36-cp36m-win_amd64.whl", hash = "sha256:8ba7c000d7ffa5452bbd0966b96e69261e4f117ebe510aeb8771a9650197b7f0"},
+    {file = "windows_curses-2.1.0-cp37-cp37m-win32.whl", hash = "sha256:97084c6b37b1534f6a28a514d521dfae402f77dcbad42b14ee32e8d5bdc13648"},
+    {file = "windows_curses-2.1.0-cp37-cp37m-win_amd64.whl", hash = "sha256:ff8c67f74b88944d99fa9d22971c05c335bc74f149120f0a69340c2c3a595497"},
+    {file = "windows_curses-2.1.0-cp38-cp38-win32.whl", hash = "sha256:66034dc9a705d87308cc9ea90836f4ee60008a1d5e2c1d34ace627f60268158b"},
+    {file = "windows_curses-2.1.0-cp38-cp38-win_amd64.whl", hash = "sha256:261fde5680d1ce4ce116908996b9a3cfb0ffb03ea68d42240f62b56a9fa6af2c"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},

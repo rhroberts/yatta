@@ -29,8 +29,7 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.close()
 
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
-DB_PATH = os.path.join(DATA_DIR, "yatta.db")
+DB_PATH = os.path.join(get_app_dirs("yatta", "data"), "yatta.db")
 
 logger = logging.getLogger(__name__)
 

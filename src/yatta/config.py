@@ -5,8 +5,7 @@ from tomlkit import document, dumps, parse, table
 
 from yatta.utils import get_app_dirs
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
-CONFIG_FILE = os.path.join(CONFIG_DIR, "settings.toml")
+CONFIG_FILE = os.path.join(get_app_dirs("yatta", "config"), "settings.toml")
 
 logger = logging.getLogger(__name__)
 

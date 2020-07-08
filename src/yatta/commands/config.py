@@ -8,7 +8,7 @@ from yatta.completion_helpers import get_figlet_fonts, get_table_formats
 from yatta.config import Config
 from yatta.utils import get_app_dirs
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
+CACHE_DIR = get_app_dirs("yatta", "cache")
 
 
 @click.group()

@@ -12,14 +12,11 @@ try:
 except ImportError:  # for Python < 3.8
     import importlib_metadata as metadata
 
-APP_NAME = "yatta"
-DATA_DIR, CONFIG_DIR, CACHE_DIR = utils.get_app_dirs()
-
 CLICK_CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"],)
 
 
 @click.group(context_settings=CLICK_CONTEXT_SETTINGS)
-@click.version_option(version=metadata.version(APP_NAME))
+@click.version_option(version=metadata.version("yatta"))
 @click.option("-l", "--log_level", default="warning")
 def main(log_level):
     # setup logging

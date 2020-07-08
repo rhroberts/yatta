@@ -18,7 +18,7 @@ from yatta.utils import (
     time_print,
 )
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
+CACHE_DIR = get_app_dirs("yatta", "cache")
 TMP_FILE = os.path.join(CACHE_DIR, "active_task")
 PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 

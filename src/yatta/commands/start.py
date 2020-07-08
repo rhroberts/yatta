@@ -12,8 +12,7 @@ from yatta.config import Config
 from yatta.daemon import daemon_start, dummy_stopwatch
 from yatta.utils import get_app_dirs
 
-DATA_DIR, CONFIG_DIR, CACHE_DIR = get_app_dirs()
-PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
+PID_FILE = os.path.join(get_app_dirs("yatta", "cache"), "yatta.pid")
 
 logger = logging.getLogger(__name__)
 

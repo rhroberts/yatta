@@ -13,34 +13,35 @@ PID_FILE = os.path.join(CACHE_DIR, "yatta.pid")
 logger = logging.getLogger(__name__)
 
 
-def get_app_dirs():
+def get_app_dirs(app_name, dir_type):
     """
     Make sure common app directories exists, create them if not
-    """
-    APP_NAME = "yatta"
-    DATA_DIR = user_data_dir(APP_NAME)
-    CONFIG_DIR = user_config_dir(APP_NAME)
-    CACHE_DIR = user_cache_dir(APP_NAME)
-    if not os.path.isdir(DATA_DIR):
-        try:
-            os.mkdir(DATA_DIR)
-            logger.debug(f"Created data directory: {DATA_DIR}")
-        except OSError:
-            logger.error(f"Failed to create directory: {DATA_DIR}")
-    if not os.path.isdir(CONFIG_DIR):
-        try:
-            os.mkdir(CONFIG_DIR)
-            logger.debug(f"Created config directory: {CONFIG_DIR}")
-        except OSError:
-            logger.error(f"Failed to create directory: {CONFIG_DIR}")
-    if not os.path.isdir(CACHE_DIR):
-        try:
-            os.mkdir(CACHE_DIR)
-            logger.debug(f"Created cache directory: {CACHE_DIR}")
-        except OSError:
-            logger.error(f"Failed to create directory: {CACHE_DIR}")
 
-    return (DATA_DIR, CONFIG_DIR, CACHE_DIR)
+    Args:
+        app_name (string): name of application
+        dir_type (string): which user directory to return
+                           options: "data", "cache", "config"
+    """
+    if dir_type == "data":
+        DIR = user_data_dir(app_name)
+    elif dir_type == "cache":
+        DIR = user_cache_dir(app_name)
+    elif dir_type == "config":
+        DIR = user_config_dir(app_name)
+    else:
+        logger.error(
+            "Incorrect dir_type argument supplied. "
+            + "Please choose one of 'data', 'cache', or 'config'."
+        )
+
+    if not os.path.isdir(DIR):
+        try:
+            os.makedirs(DIR)
+            logger.debug(f"Created data directory: {DIR}")
+        except OSError:
+            logger.error(f"Failed to create directory: {DIR}")
+
+    return DIR
 
 
 def time_div(count):

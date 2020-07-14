@@ -119,7 +119,9 @@ def _preproc_data(data, period, start_date):
         data_fmt = pd.DataFrame(index=days.values(), columns=df["task_name"].unique())
         for col in data_fmt.columns:
             task_df = df.loc[df["task_name"] == col]
-            data_fmt.loc[task_df["weekday"], col] = task_df["duration"].sum()
+            data_fmt.loc[task_df["weekday"], col] = task_df.groupby(["weekday"]).sum()[
+                "duration"
+            ]
         data_fmt = data_fmt.dropna(axis=0, how="all").fillna(0)
     elif period == "month":
         year, month, day = start_date.timetuple()[:3]

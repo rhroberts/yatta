@@ -87,6 +87,9 @@ def records(record_id, start_time=None, end_time=None):
     """
     Edit record details.
     """
+    if record_id == "0":
+        query = db.get_records()
+        record_id = query.all()[-1].id
     query = db.get_records(record_id=record_id)
     _record = query.first()
     if not _record:
